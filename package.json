@@ -1,0 +1,18 @@
+{
+  "name": "greensmartcity-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "권윤아 | 상명대학교 그린스마트시티학과 포트폴리오 (프론트엔드 / 백엔드 분리)",
+  "workspaces": [
+    "backend"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @portfolio/backend",
+    "start": "npm run start --workspace @portfolio/backend",
+    "sync:fallback": "node scripts/sync-fallback.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

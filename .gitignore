@@ -1,2 +1,21 @@
+# macOS
 .DS_Store
+
+# 개인 메모
 개인정보.txt
+
+# 의존성
+node_modules/
+
+# 환경변수 (.env.example 만 커밋합니다)
+.env
+.env.local
+*.env
+
+# 빌드 / 배포
+.vercel/
+dist/
+
+# 로그
+*.log
+npm-debug.log*

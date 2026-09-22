@@ -159,7 +159,7 @@ body {
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url('hero_background.jpg');
+  background-image: url('/assets/images/hero_background.jpg');
   background-size: cover;
   background-position: center;
   filter: brightness(0.35) saturate(1.2);
@@ -895,4 +895,36 @@ body {
   .awards-grid { grid-template-columns: 1fr; }
   .skills-grid { grid-template-columns: 1fr 1fr; }
   .about-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* =========================================
+   데이터 로딩 상태 (프론트/백엔드 분리 이후 추가)
+   ========================================= */
+.load-error {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  padding: 0.9rem 1.25rem;
+  background: #b3261e;
+  color: #fff;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  padding: 2rem;
+  text-align: center;
+  opacity: 0.6;
+}
+
+body.is-loading #app {
+  opacity: 0;
+}
+
+#app {
+  opacity: 1;
+  transition: opacity 0.35s ease;
 }
