@@ -79,14 +79,10 @@
 
   "location": {
     "intro": "직접 만나 포트폴리오와 작업 이야기를 나누고 싶으시다면 아래 장소로 찾아와 주세요.",
-    "placeName": "",
-    "address": "",
-    "mapQuery": "",
-    "directions": [
-      { "id": "location-subway", "icon": "🚇", "label": "지하철", "value": "가까운 역과 출구 정보를 입력해 주세요." },
-      { "id": "location-bus", "icon": "🚌", "label": "버스", "value": "정류장과 노선 정보를 입력해 주세요." },
-      { "id": "location-parking", "icon": "🅿️", "label": "주차", "value": "주차 가능 여부를 입력해 주세요." }
-    ],
+    "placeName": "상명대학교 천안캠퍼스 C404a",
+    "address": "충청남도 천안시 동남구 상명대길 31, 상명대학교 천안캠퍼스 C404a",
+    "mapQuery": "충청남도 천안시 동남구 상명대길 31",
+    "directions": [],
     "note": "방문 전 아래에서 예약해 주시면 시간에 맞춰 기다리고 있을게요."
   },
 
