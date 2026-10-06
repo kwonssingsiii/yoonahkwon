@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- 아래 두 값은 /api/portfolio 응답으로 덮어써집니다(render/meta.js). -->
+  <title>권윤아 | 그린스마트시티학과 포트폴리오</title>
+  <meta name="description" content="상명대학교 그린스마트시티학과 3학년 권윤아의 개인 포트폴리오 웹사이트입니다." />
+
+  <!-- 백엔드 주소를 고정하고 싶을 때 content 를 채우세요. 비우면 자동 판별합니다.
+       예) <meta name="api-base" content="https://api.example.com/api" /> -->
+  <meta name="api-base" content="" />
+
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/css/style.css" />
+</head>
+<body>
+
+  <div id="app">
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <span class="logo-text">권윤아</span>
+          <span class="logo-dot">.</span>
+        </div>
+        <ul class="nav-links" id="nav-links"><!-- render/navbar.js --></ul>
+        <button class="hamburger" id="hamburger" aria-label="메뉴 열기">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-particles" id="particles"><!-- ui/particles.js --></div>
+      <div class="hero-content" id="hero-content"><!-- render/hero.js --></div>
+      <div class="hero-scroll-indicator">
+        <div class="scroll-dot"></div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">About Me</span>
+          <h2 class="section-title">자기소개</h2>
+        </div>
+        <div class="about-grid" id="about-grid"><!-- render/about.js --></div>
+        <div class="bio-section">
+          <div class="bio-text" id="bio-text"><!-- render/about.js --></div>
+          <div class="bio-tags" id="bio-tags"><!-- render/about.js --></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Education -->
+    <section class="section section-dark" id="education">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Education</span>
+          <h2 class="section-title">학력사항</h2>
+        </div>
+        <div class="timeline" id="timeline"><!-- render/education.js --></div>
+      </div>
+    </section>
+
+    <!-- Awards -->
+    <section class="section" id="awards">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Awards &amp; Competitions</span>
+          <h2 class="section-title">공모전 참여 이력</h2>
+        </div>
+        <div class="awards-grid" id="awards-grid"><!-- render/awards.js --></div>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section class="section section-dark" id="skills">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Interests</span>
+          <h2 class="section-title">관심 분야</h2>
+        </div>
+        <div class="skills-grid" id="skills-grid"><!-- render/skills.js --></div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Contact</span>
+          <h2 class="section-title">연락처</h2>
+        </div>
+        <div class="contact-content">
+          <p class="contact-intro" id="contact-intro"><!-- render/contact.js --></p>
+          <div class="contact-cards" id="contact-cards"><!-- render/contact.js --></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Location -->
+    <section class="section section-dark" id="location">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Location</span>
+          <h2 class="section-title">찾아오는 길</h2>
+        </div>
+        <p class="section-intro" id="location-intro"><!-- render/location.js --></p>
+        <div class="location-grid">
+          <div class="location-map" id="location-map"><!-- render/location.js --></div>
+          <div class="location-info" id="location-info"><!-- render/location.js --></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-inner" id="footer-inner"><!-- render/footer.js --></div>
+    </footer>
+
+  </div>
+
+  <script type="module" src="/src/js/main.js"></script>
+</body>
+</html>
