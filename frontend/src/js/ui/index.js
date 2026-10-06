@@ -9,6 +9,7 @@ import initTilt from './tilt.js';
 import initProgressBar from './progress.js';
 import initSmoothScroll from './smoothScroll.js';
 import initReservation from './reservation.js';
+import initWeather from './weather.js';
 
 export const initUI = () => {
   initNavbar();
@@ -18,7 +19,8 @@ export const initUI = () => {
   initReveal();
   initTilt();
   initReservation();
+  initWeather();
 };
 
-export { initNavbar, initReveal, initParticles, initTilt, initProgressBar, initSmoothScroll, initReservation };
+export { initNavbar, initReveal, initParticles, initTilt, initProgressBar, initSmoothScroll, initReservation, initWeather };
 export default initUI;

@@ -8,16 +8,21 @@
  *
  * 예시:
  *   const data = await requestExternal('/air-quality', { query: { sido: '서울' } });
+ *
+ * 키가 필요 없는 공개 API 는 baseUrl 을 직접 넘기면 됩니다.
+ * 이때는 EXTERNAL_API_KEY 가 다른 서비스로 새지 않도록 Authorization 헤더를 붙이지 않습니다.
+ *   const data = await requestExternal('/v1/forecast', { baseUrl: 'https://api.open-meteo.com', query });
  */
 import config from '../../config/index.js';
 import ApiError from '../../utils/ApiError.js';
 
-export const requestExternal = async (path, { method = 'GET', query, body, headers } = {}) => {
-  if (!config.external.baseUrl) {
+export const requestExternal = async (path, { method = 'GET', query, body, headers, baseUrl } = {}) => {
+  const useDefaultApi = !baseUrl;
+  if (useDefaultApi && !config.external.baseUrl) {
     throw ApiError.internal('EXTERNAL_API_BASE_URL 이 설정되지 않았습니다. backend/.env 를 확인하세요.');
   }
 
-  const url = new URL(path, config.external.baseUrl);
+  const url = new URL(path, baseUrl ?? config.external.baseUrl);
   Object.entries(query ?? {}).forEach(([key, value]) => {
     if (value !== undefined && value !== null) url.searchParams.set(key, String(value));
   });
@@ -31,7 +36,7 @@ export const requestExternal = async (path, { method = 'GET', query, body, heade
       signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
-        ...(config.external.apiKey ? { Authorization: `Bearer ${config.external.apiKey}` } : {}),
+        ...(useDefaultApi && config.external.apiKey ? { Authorization: `Bearer ${config.external.apiKey}` } : {}),
         ...headers,
       },
       ...(body ? { body: JSON.stringify(body) } : {}),

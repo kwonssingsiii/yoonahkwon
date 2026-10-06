@@ -12,6 +12,12 @@ const mapLinks = (query) => {
   ];
 };
 
+/** 화면에 작게 표기하는 외부 서비스 출처 (Open-Meteo 는 CC BY 4.0 이라 표기가 필수입니다) */
+const SOURCES = [
+  { label: '지도', name: 'Google 지도', href: 'https://www.google.com/maps' },
+  { label: '날씨', name: 'Open-Meteo (CC BY 4.0)', href: 'https://open-meteo.com/' },
+];
+
 const directionCard = (item) => `
   <div class="contact-card location-card" id="${escapeHtml(item.id)}">
     <div class="contact-card-icon">${escapeHtml(item.icon)}</div>
@@ -54,8 +60,22 @@ export const renderLocation = ({ location }) => {
           : ''
       }
     </div>
+    ${
+      location.coordinates
+        ? `<div class="location-weather" id="location-weather" aria-live="polite">
+             <p class="weather-hint">현재 날씨를 불러오는 중…</p>
+           </div>`
+        : ''
+    }
     <div class="location-directions">${joinHtml(location.directions ?? [], directionCard)}</div>
-    ${location.note ? `<p class="location-note">${escapeHtml(location.note)}</p>` : ''}`,
+    ${location.note ? `<p class="location-note">${escapeHtml(location.note)}</p>` : ''}
+    <p class="location-sources">
+      출처 ·
+      ${SOURCES.map(
+        (s) =>
+          `${escapeHtml(s.label)}: <a href="${escapeHtml(s.href)}" target="_blank" rel="noopener">${escapeHtml(s.name)}</a>`,
+      ).join(' · ')}
+    </p>`,
   );
 };
 

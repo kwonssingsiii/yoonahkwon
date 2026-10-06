@@ -98,6 +98,7 @@ npm run dev          # http://localhost:4000
 | GET | `/api/contact/messages` | 문의 메시지 목록 |
 | GET | `/api/reservations/availability?date=YYYY-MM-DD` | 날짜별 예약 가능 시간 |
 | POST | `/api/reservations` | 방문 예약 신청 (중복 시간이면 409) |
+| GET | `/api/weather` | 찾아오는 길 주소 기준 현재 기온 · 습도 (Open-Meteo, 10분 캐시) |
 
 ---
 
@@ -126,7 +127,7 @@ npm run dev          # http://localhost:4000
 
 `backend/src/data/portfolio.json` 의 두 항목에서 바꿉니다.
 
-- `location` — `placeName`, `address`, `mapQuery`(지도 검색어, 비우면 주소 사용), `directions`(지하철·버스·주차 안내)
+- `location` — `placeName`, `address`, `mapQuery`(지도 검색어, 비우면 주소 사용), `coordinates`(날씨 조회 위도·경도), `directions`(지하철·버스·주차 안내)
 - `reservation` — `timeSlots`(예약 시간대), `closedWeekdays`(휴무 요일, 0=일 ~ 6=토), `maxDaysAhead`(며칠 뒤까지 예약 가능), `purposes`(방문 목적)
 
 > ⚠️ 예약은 지금 메모리에만 저장되어 서버가 재시작되면 사라집니다. 실제로 예약을 받기 전에 `repositories/mongo/reservation.repository.js` 를 채워 영구 저장소로 옮기세요.
