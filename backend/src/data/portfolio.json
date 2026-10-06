@@ -84,7 +84,7 @@
     "mapQuery": "충청남도 천안시 동남구 상명대길 31",
     "coordinates": { "lat": 36.833, "lon": 127.179 },
     "directions": [],
-    "note": "방문 전 아래에서 예약해 주시면 시간에 맞춰 기다리고 있을게요."
+    "note": "방문 전 아래 버튼으로 예약해 주시면 시간에 맞춰 기다리고 있을게요."
   },
 
   "reservation": {
@@ -106,7 +106,7 @@
       { "href": "#awards", "label": "공모전" },
       { "href": "#contact", "label": "연락처" },
       { "href": "#location", "label": "찾아오는 길" },
-      { "href": "#reservation", "label": "예약" }
+      { "href": "/reservation.html", "label": "예약" }
     ]
   }
 }

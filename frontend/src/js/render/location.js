@@ -69,6 +69,7 @@ export const renderLocation = ({ location }) => {
     }
     <div class="location-directions">${joinHtml(location.directions ?? [], directionCard)}</div>
     ${location.note ? `<p class="location-note">${escapeHtml(location.note)}</p>` : ''}
+    <a href="/reservation.html" class="btn-primary location-cta" id="location-reserve-btn">방문 예약하기</a>
     <p class="location-sources">
       출처 ·
       ${SOURCES.map(

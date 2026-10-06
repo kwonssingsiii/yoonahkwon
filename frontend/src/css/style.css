@@ -1232,3 +1232,24 @@ body.is-loading #app {
   .reservation-form { padding: 1.75rem 1.25rem; }
   .section-intro { margin-top: -2rem; }
 }
+
+/* =========================================
+   방문 예약 버튼 · 예약 페이지
+   ========================================= */
+.location-cta {
+  align-self: flex-start;
+}
+
+.subpage {
+  min-height: calc(100vh - 160px);
+  padding-top: 9rem;
+}
+
+.subpage-back {
+  color: var(--clr-text-muted);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.subpage-back:hover { color: var(--clr-primary); }

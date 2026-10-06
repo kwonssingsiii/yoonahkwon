@@ -10,7 +10,8 @@ const addDays = (date, days) => {
 };
 
 export const renderReservation = ({ reservation }) => {
-  if (!reservation) return;
+  // 예약 폼이 있는 페이지에서만 동작합니다. (메인 페이지에서는 /reservation.html 로 이동)
+  if (!reservation || !document.getElementById('reservation-form')) return;
   setText('#reservation-intro', reservation.intro);
 
   mount(
