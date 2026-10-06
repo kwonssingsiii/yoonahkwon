@@ -48,11 +48,39 @@ const rowHtml = (r) => `
     <td class="cell-actions">${actionButtons(r)}</td>
   </tr>`;
 
+/** 필터: 'all' 또는 STATUSES 의 value. 주소(?status=)에도 남겨 새로고침해도 유지합니다. */
+const FILTERS = [{ value: 'all', label: '전체' }, ...STATUSES];
+
+const readFilter = () => {
+  const value = new URLSearchParams(window.location.search).get('status');
+  return FILTERS.some((f) => f.value === value) ? value : 'all';
+};
+
+const writeFilter = (value) => {
+  const url = new URL(window.location.href);
+  if (value === 'all') url.searchParams.delete('status');
+  else url.searchParams.set('status', value);
+  window.history.replaceState(null, '', url);
+};
+
+const countOf = (rows, value) => (value === 'all' ? rows.length : rows.filter((r) => r.status === value).length);
+
+/** 요약 문장: 전체 N건 / 접수 N건 / 확정 N건 / 변경 요청 N건 / 취소 N건 */
 const renderSummary = (rows) => {
-  const count = (value) => rows.filter((r) => r.status === value).length;
-  $('reservation-summary').innerHTML = `
-    <span>전체 <strong>${rows.length}</strong>건</span>
-    ${STATUSES.map((s) => `<span class="summary-${s.value}">${s.label} <strong>${count(s.value)}</strong></span>`).join('')}`;
+  $('reservation-summary').innerHTML = FILTERS.map(
+    (f) => `<span class="summary-item summary-${f.value}">${f.label} <strong>${countOf(rows, f.value)}</strong>건</span>`,
+  ).join('<span class="summary-sep" aria-hidden="true">/</span>');
+};
+
+/** 상태 필터 버튼 (건수 포함) */
+const renderFilters = (rows, active) => {
+  $('reservation-filters').innerHTML = FILTERS.map(
+    (f) => `
+    <button type="button" class="status-filter status-filter-${f.value}${f.value === active ? ' is-active' : ''}"
+            data-filter="${f.value}" aria-pressed="${f.value === active}">
+      ${escapeHtml(f.label)} <span class="status-filter-count">${countOf(rows, f.value)}</span>
+    </button>`,
+  ).join('');
 };
 
 const setMessage = (text, type = '') => {
@@ -73,16 +101,37 @@ const init = async () => {
   }
 
   let rows = [];
+  let filter = readFilter();
+
+  /** 요약 · 필터 · 테이블을 현재 rows 와 filter 로 다시 그립니다. */
+  const render = () => {
+    renderSummary(rows);
+    renderFilters(rows, filter);
+
+    const visible = filter === 'all' ? rows : rows.filter((r) => r.status === filter);
+    const label = FILTERS.find((f) => f.value === filter).label;
+    $('reservation-table-body').innerHTML = visible.length
+      ? visible.map(rowHtml).join('')
+      : `<tr><td colspan="6" class="table-empty">${
+          rows.length ? `"${escapeHtml(label)}" 상태인 예약이 없습니다.` : '아직 들어온 예약이 없습니다.'
+        }</td></tr>`;
+  };
 
   const load = async () => {
     const { data, error } = await supabase.from('reservations').select(COLUMNS).order('created_at', { ascending: false });
     if (error) throw error;
     rows = data;
-    renderSummary(rows);
-    $('reservation-table-body').innerHTML = rows.length
-      ? rows.map(rowHtml).join('')
-      : '<tr><td colspan="6" class="table-empty">아직 들어온 예약이 없습니다.</td></tr>';
+    render();
   };
+
+  $('reservation-filters').addEventListener('click', (event) => {
+    const button = event.target.closest('[data-filter]');
+    if (!button) return;
+    filter = button.dataset.filter;
+    writeFilter(filter);
+    setMessage('');
+    render();
+  });
 
   $('reservation-table-body').addEventListener('click', async (event) => {
     const button = event.target.closest('[data-status]');
@@ -113,9 +162,12 @@ const init = async () => {
     }
 
     Object.assign(row, data);
-    tr.outerHTML = rowHtml(row);
-    renderSummary(rows);
-    setMessage(`${row.reservation_no} · ${row.name} 님 예약을 "${labelOf(next)}"(으)로 변경했습니다.`, 'success');
+    render(); // 필터를 걸어 둔 상태라면 바뀐 예약은 목록에서 빠집니다.
+    setMessage(
+      `${row.reservation_no} · ${row.name} 님 예약을 "${labelOf(next)}"(으)로 변경했습니다.` +
+        (filter !== 'all' && filter !== next ? ` ("${labelOf(next)}" 필터에서 확인할 수 있습니다)` : ''),
+      'success',
+    );
   });
 
   $('reservation-refresh').addEventListener('click', () =>

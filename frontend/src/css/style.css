@@ -1675,7 +1675,60 @@ body.is-loading #app {
   color: var(--clr-text-muted);
 }
 
-.admin-summary strong { color: var(--clr-white); }
+.admin-summary {
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.admin-summary strong { color: var(--clr-white); margin-left: 0.15rem; }
+.summary-sep { color: rgba(138, 171, 147, 0.4); }
+.summary-pending strong { color: var(--clr-gold); }
+.summary-confirmed strong { color: var(--clr-primary); }
+.summary-change_requested strong { color: #70c0ee; }
+.summary-cancelled strong { color: #f28b82; }
+
+/* 처리 상태 필터 */
+.status-filters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.status-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 1rem;
+  border-radius: 100px;
+  border: 1px solid var(--clr-border);
+  background: var(--clr-surface);
+  color: var(--clr-text);
+  font-family: var(--font-main);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition), color var(--transition);
+}
+
+.status-filter:hover { border-color: var(--clr-primary); }
+
+.status-filter-count {
+  min-width: 1.5rem;
+  padding: 0.05rem 0.45rem;
+  border-radius: 100px;
+  background: rgba(138, 171, 147, 0.15);
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+.status-filter.is-active { color: #0a0f0d; }
+.status-filter.is-active .status-filter-count { background: rgba(10, 15, 13, 0.2); }
+.status-filter-all.is-active { background: var(--clr-text); border-color: var(--clr-text); }
+.status-filter-pending.is-active { background: var(--clr-gold); border-color: var(--clr-gold); }
+.status-filter-confirmed.is-active { background: var(--clr-primary); border-color: var(--clr-primary); }
+.status-filter-change_requested.is-active { background: #70c0ee; border-color: #70c0ee; }
+.status-filter-cancelled.is-active { background: #f28b82; border-color: #f28b82; }
 
 .admin-message {
   min-height: 1.4em;
