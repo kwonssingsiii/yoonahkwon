@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/css/style.css" />
+  <title>예약하기관리 | 권윤아 포트폴리오 관리자</title>
+</head>
+<body class="admin-body">
+
+  <!-- 로그인 후에만 보이는 관리자 헤더 (탭은 src/js/admin/session.js) -->
+  <header class="admin-header" id="admin-header" hidden>
+    <div class="admin-header-inner">
+      <a href="/admin.html" class="admin-brand">권윤아<span class="logo-dot">.</span> <small>관리자</small></a>
+      <div class="admin-header-right">
+        <span class="admin-user"></span>
+        <nav class="admin-tabs" aria-label="관리자 메뉴"></nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-main admin-main-wide">
+    <div class="admin-page-head">
+      <div>
+        <h1 class="admin-title">예약하기관리</h1>
+        <p class="admin-summary" id="reservation-summary"></p>
+      </div>
+      <button type="button" class="admin-refresh" id="reservation-refresh">↻ 새로고침</button>
+    </div>
+    <p class="admin-message" id="reservation-message" role="status" aria-live="polite"></p>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th scope="col">예약번호</th>
+            <th scope="col">신청자/이메일</th>
+            <th scope="col">방문 희망 시간</th>
+            <th scope="col">방문 목적</th>
+            <th scope="col">처리 상태</th>
+            <th scope="col">관리</th>
+          </tr>
+        </thead>
+        <tbody id="reservation-table-body">
+          <tr><td colspan="6" class="table-empty">예약 목록을 불러오는 중…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script type="module" src="/src/js/admin/reservations.js"></script>
+</body>
+</html>

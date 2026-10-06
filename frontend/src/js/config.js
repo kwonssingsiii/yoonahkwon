@@ -27,6 +27,14 @@ export const config = {
    * 받는 이메일 주소는 코드가 아니라 Formspree 대시보드의 폼 설정에서 정합니다.
    */
   formspreeEndpoint: 'https://formspree.io/f/myekzzkq',
+  /**
+   * 관리자 화면(admin*.html)이 로그인 · 예약 조회에 쓰는 Supabase.
+   * publishable 키는 공개용이며, 예약 조회 · 상태 변경은 RLS 로 관리자 계정만 가능합니다.
+   */
+  supabase: {
+    url: 'https://tzvbuggdqoekgocxqxaz.supabase.co',
+    publishableKey: 'sb_publishable_Otc9MamUF-N1JlSNaLYoqw_Rl9nixHP',
+  },
 };
 
 export default config;

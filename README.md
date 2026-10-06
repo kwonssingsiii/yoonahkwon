@@ -131,6 +131,16 @@ npm run dev          # http://localhost:4000
 - `location` — `placeName`, `address`, `mapQuery`(지도 검색어, 비우면 주소 사용), `coordinates`(날씨 조회 위도·경도), `directions`(지하철·버스·주차 안내)
 - `reservation` — `timeSlots`(희망 시간 목록), `durationMinutes`(상담 시간), `closedWeekdays`(휴무 요일, 0=일 ~ 6=토), `maxDaysAhead`(며칠 뒤까지 예약 가능). 공휴일은 자동으로 막힙니다.
 
+### 관리자 화면 (`/admin.html`)
+
+로그인 후 오른쪽 위 **예약하기관리** 탭 → `/admin-reservations.html` 에서 예약 목록을 보고
+처리 상태(접수 · 확정 · 변경 요청 · 취소)를 버튼으로 바꿉니다.
+
+- 처음 한 번: `supabase/migrations/20261006_admin_reservations.sql` 을 Supabase SQL Editor 에서 실행
+- 관리자 계정: Supabase → Authentication → Users → Add user (관리자 이메일 + 비밀번호, Auto Confirm)
+- 관리자 추가: `insert into public.admins (email) values ('new@example.com');`
+- 예약번호 `R261007-1330-A1B2` = 방문 날짜 · 시간 + 이름/이메일 코드 (같은 사람도 방문 시간별로 다름)
+
 ### 예약 확인하기 (운영자)
 
 예약은 Supabase 프로젝트 **yoonahkwon-portfolio** 의 `reservations` 테이블에 저장됩니다.

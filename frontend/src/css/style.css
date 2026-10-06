@@ -1518,3 +1518,296 @@ body.is-loading #app {
   .confirm-body { padding: 1.5rem 1.25rem; }
   .confirm-actions > * { flex: 1; }
 }
+
+/* =========================================
+   ADMIN (admin.html · admin-reservations.html)
+   ========================================= */
+.admin-body { min-height: 100vh; }
+
+.admin-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 15, 13, 0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--clr-border);
+}
+
+.admin-header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0.9rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.admin-brand {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--clr-white);
+  text-decoration: none;
+}
+
+.admin-brand small {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--clr-primary);
+  margin-left: 0.3rem;
+}
+
+.admin-header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.admin-user {
+  font-size: 0.8rem;
+  color: var(--clr-text-muted);
+}
+
+.admin-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-tab,
+.admin-logout,
+.admin-refresh {
+  padding: 0.5rem 1rem;
+  border-radius: 100px;
+  border: 1px solid var(--clr-border);
+  background: transparent;
+  color: var(--clr-text);
+  font-family: var(--font-main);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition), color var(--transition);
+}
+
+.admin-tab:hover,
+.admin-refresh:hover { border-color: var(--clr-primary); color: var(--clr-primary); }
+
+.admin-tab.is-active {
+  background: var(--clr-primary);
+  border-color: var(--clr-primary);
+  color: #fff;
+}
+
+.admin-logout { color: var(--clr-text-muted); }
+.admin-logout:hover { color: #f28b82; border-color: #f28b82; }
+
+.admin-main {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 4rem;
+}
+
+.admin-main-wide { max-width: 1280px; }
+
+.admin-card {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.admin-card[hidden],
+.admin-header[hidden] { display: none; }
+
+.admin-login { margin-top: 8vh; }
+
+.admin-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.admin-title {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--clr-white);
+}
+
+.admin-text { color: var(--clr-text-muted); }
+
+.admin-link-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  text-decoration: none;
+  transition: border-color var(--transition);
+}
+
+.admin-link-card:hover { border-color: var(--clr-primary); }
+.admin-link-card span { font-size: 0.88rem; color: var(--clr-text-muted); }
+
+.admin-page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.admin-summary {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--clr-text-muted);
+}
+
+.admin-summary strong { color: var(--clr-white); }
+
+.admin-message {
+  min-height: 1.4em;
+  margin-bottom: 0.75rem;
+  font-size: 0.88rem;
+}
+
+.admin-message[data-type="success"] { color: var(--clr-primary); }
+.admin-message[data-type="error"] { color: #f28b82; }
+
+/* ── 예약 테이블 (좁은 화면에서는 표 안에서만 가로 스크롤) ── */
+.admin-table-wrap {
+  overflow-x: auto;
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+}
+
+.admin-table {
+  width: 100%;
+  min-width: 980px;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.admin-table th {
+  position: sticky;
+  top: 0;
+  background: var(--clr-surface2);
+  color: var(--clr-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-align: left;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--clr-border);
+  white-space: nowrap;
+}
+
+.admin-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--clr-border);
+  vertical-align: top;
+  color: var(--clr-text);
+}
+
+.admin-table tbody tr:last-child td { border-bottom: none; }
+.admin-table tbody tr:hover td { background: rgba(74, 181, 105, 0.04); }
+.admin-table tr[data-status="cancelled"] td:not(.cell-actions) { opacity: 0.5; }
+
+.cell-no {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.82rem;
+  white-space: nowrap;
+  color: var(--clr-accent);
+}
+
+.cell-person,
+.cell-time { white-space: nowrap; }
+
+.cell-person strong,
+.cell-time span { display: block; }
+
+.cell-person a {
+  font-size: 0.82rem;
+  color: var(--clr-text-muted);
+  text-decoration: none;
+}
+
+.cell-person a:hover { color: var(--clr-primary); text-decoration: underline; }
+.cell-time span { font-size: 0.82rem; color: var(--clr-text-muted); }
+.cell-time strong { font-size: 1rem; }
+
+.cell-purpose {
+  max-width: 320px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+}
+
+.table-empty {
+  text-align: center;
+  padding: 3rem 1rem !important;
+  color: var(--clr-text-muted);
+}
+
+/* 처리 상태 배지 · 관리 버튼 (상태별 색) */
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 100px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  border: 1px solid currentColor;
+}
+
+.status-pending { color: var(--clr-gold); background: rgba(201, 168, 76, 0.12); }
+.status-confirmed { color: var(--clr-primary); background: rgba(74, 181, 105, 0.14); }
+.status-change_requested { color: #70c0ee; background: rgba(80, 160, 220, 0.14); }
+.status-cancelled { color: #f28b82; background: rgba(242, 139, 130, 0.12); }
+
+.status-actions {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: nowrap;
+}
+
+.status-action {
+  padding: 0.4rem 0.7rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--clr-border);
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  font-family: var(--font-main);
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition), color var(--transition);
+}
+
+.status-action:hover:not(:disabled) { border-color: currentColor; }
+.status-action-pending:hover:not(:disabled) { color: var(--clr-gold); }
+.status-action-confirmed:hover:not(:disabled) { color: var(--clr-primary); }
+.status-action-change_requested:hover:not(:disabled) { color: #70c0ee; }
+.status-action-cancelled:hover:not(:disabled) { color: #f28b82; }
+
+.status-action:disabled:not(.is-current) { opacity: 0.4; cursor: wait; }
+
+.status-action.is-current { cursor: default; color: #0a0f0d; }
+.status-action-pending.is-current { background: var(--clr-gold); border-color: var(--clr-gold); }
+.status-action-confirmed.is-current { background: var(--clr-primary); border-color: var(--clr-primary); }
+.status-action-change_requested.is-current { background: #70c0ee; border-color: #70c0ee; }
+.status-action-cancelled.is-current { background: #f28b82; border-color: #f28b82; }
