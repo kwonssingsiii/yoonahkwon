@@ -1,6 +1,7 @@
 /**
  * 방문 예약 페이지(reservation.html) 진입점.
- *   1) 예약 규칙 · 공휴일을 불러와 캘린더를 그리고
+ *   1) 예약 규칙을 불러와 캘린더를 바로 그리고, 공휴일은 뒤이어 받아서 막습니다
+ *      (공휴일 API 가 느려도 캘린더가 늦게 뜨지 않도록 — 서버도 예약 시 공휴일을 다시 확인합니다)
  *   2) 입력값이 모두 채워지고 동의했을 때만 "예약하기" 를 켜고
  *   3) 최종 확인 팝업에서 한 번 더 "예약하기" 를 눌러야 실제로 저장합니다.
  */
@@ -143,16 +144,7 @@ const bootstrap = async () => {
   // ── 캘린더 ────────────────────────────────
   const today = todayInSeoul();
   const lastDay = addDays(today, settings.maxDaysAhead);
-
   let holidays = {};
-  try {
-    holidays = await loadHolidays(today, lastDay);
-  } catch (error) {
-    console.warn('[reservation] 공휴일 조회 실패:', error.message);
-    const status = $('holiday-status');
-    status.hidden = false;
-    status.textContent = '공휴일 정보를 불러오지 못했습니다. 공휴일인 날짜는 신청 후 운영자가 조정해 드립니다.';
-  }
 
   const calendar = createCalendar($('calendar'), {
     min: today,
@@ -170,6 +162,30 @@ const bootstrap = async () => {
       updateSubmitState();
     },
   });
+
+  // 공휴일은 캘린더를 그린 뒤 받아서 반영합니다.
+  const holidayStatus = $('holiday-status');
+  holidayStatus.hidden = false;
+  holidayStatus.textContent = '공휴일 정보를 확인하는 중…';
+  loadHolidays(today, lastDay)
+    .then((loaded) => {
+      holidays = loaded;
+      holidayStatus.hidden = true;
+      calendar.refresh();
+      // 공휴일 정보가 오기 전에 공휴일을 골랐다면 선택을 풀어 줍니다.
+      if (holidays[fields.date.value]) {
+        setError('date', `공휴일(${holidays[fields.date.value]})에는 예약할 수 없습니다. 다른 날짜를 선택해 주세요.`);
+        fields.date.value = '';
+        dateBox.value = '';
+        calendar.clear();
+        resetTimeSelect('날짜를 먼저 선택해 주세요');
+        updateSubmitState();
+      }
+    })
+    .catch((error) => {
+      console.warn('[reservation] 공휴일 조회 실패:', error.message);
+      holidayStatus.textContent = '공휴일 정보를 불러오지 못했습니다. 공휴일인 날짜는 예약 시 다시 확인합니다.';
+    });
 
   const resetForm = () => {
     form.reset();
@@ -256,5 +272,8 @@ const bootstrap = async () => {
 
 bootstrap().catch((error) => {
   console.error('[reservation] 초기화 실패:', error);
-  setText('#reservation-intro', '예약 페이지를 불러오지 못했습니다. 잠시 후 새로고침해 주세요.');
+  const message = `예약 페이지를 불러오지 못했습니다. 잠시 후 새로고침해 주세요. (${error.message})`;
+  setText('#reservation-intro', message);
+  const calendarBox = document.getElementById('calendar');
+  if (calendarBox) calendarBox.innerHTML = `<p class="field-error">${escapeHtml(message)}</p>`;
 });
