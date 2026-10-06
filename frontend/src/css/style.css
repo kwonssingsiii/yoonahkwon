@@ -1345,6 +1345,12 @@ body.is-loading #app {
   text-decoration: line-through;
 }
 
+.calendar-day.is-full:disabled {
+  color: rgba(201, 168, 76, 0.6);
+  background: rgba(201, 168, 76, 0.06);
+  text-decoration: line-through;
+}
+
 .calendar-day.is-today { border-color: rgba(74, 181, 105, 0.45); }
 
 .calendar-day.is-selected,
@@ -1372,6 +1378,7 @@ body.is-loading #app {
 }
 
 .legend-dot.is-off { background: rgba(138, 171, 147, 0.15); }
+.legend-dot.is-full { background: rgba(201, 168, 76, 0.45); }
 
 /* ── 동의 · 예약하기 ── */
 .reserve-submit {

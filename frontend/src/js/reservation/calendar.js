@@ -31,6 +31,7 @@ export const createCalendar = (root, { min, max, getBlockReason, onSelect }) => 
     const classes = [
       'calendar-day',
       reason?.startsWith('공휴일') ? 'is-holiday' : '',
+      reason?.startsWith('예약 마감') ? 'is-full' : '',
       iso === min ? 'is-today' : '',
       iso === selected ? 'is-selected' : '',
     ]
