@@ -122,18 +122,20 @@ const bootstrap = async () => {
 
     const open = slots.filter((s) => s.available);
     if (!open.length) {
-      resetTimeSelect('이 날짜는 예약이 모두 찼습니다');
+      resetTimeSelect('이 날짜는 예약이 모두 완료되었습니다');
       updateSubmitState();
       return;
     }
 
+    // 남은 시간은 그대로, 이미 예약된 시간은 "(완료)", 오늘 지난 시간은 "(마감)" — 둘 다 선택 불가
+    const suffix = (s) => (s.available ? '' : s.reason === 'past' ? ' (마감)' : ' (완료)');
     fields.time.innerHTML = `
       <option value="">시간을 선택해 주세요</option>
       ${slots
         .map(
           (s) =>
             `<option value="${escapeHtml(s.time)}" ${s.available ? '' : 'disabled'}>
-               ${escapeHtml(s.time)}${s.available ? '' : ' (마감)'}
+               ${escapeHtml(s.time)}${suffix(s)}
              </option>`,
         )
         .join('')}`;
@@ -146,6 +148,7 @@ const bootstrap = async () => {
   const today = todayInSeoul();
   const lastDay = addDays(today, settings.maxDaysAhead);
   let holidays = {};
+  let fullDates = new Set(); // 모든 시간이 예약 완료된 날짜
 
   const calendar = createCalendar($('calendar'), {
     min: today,
@@ -153,6 +156,7 @@ const bootstrap = async () => {
     getBlockReason: (iso) => {
       if (holidays[iso]) return `공휴일(${holidays[iso]})`;
       if (settings.closedWeekdays.includes(weekdayOf(iso))) return '주말';
+      if (fullDates.has(iso)) return '예약 마감 (모든 시간 예약 완료)';
       return null;
     },
     onSelect: (iso) => {
@@ -163,6 +167,31 @@ const bootstrap = async () => {
       updateSubmitState();
     },
   });
+
+  /** 고른 날짜가 막히게 됐을 때(공휴일 · 예약 마감) 선택을 풀고 이유를 보여 줍니다. */
+  const clearSelectedDate = (message) => {
+    setError('date', message);
+    fields.date.value = '';
+    dateBox.value = '';
+    calendar.clear();
+    resetTimeSelect('날짜를 먼저 선택해 주세요');
+    updateSubmitState();
+  };
+
+  /** 예약 완료로 꽉 찬 날짜를 받아 캘린더에 반영합니다. (처음 · 예약 직후 · 409 때) */
+  const refreshFullDates = async () => {
+    try {
+      fullDates = new Set((await reservationApi.getFullDates()).fullDates);
+    } catch (error) {
+      console.warn('[reservation] 예약 마감 날짜 조회 실패:', error.message);
+      return; // 날짜는 고를 수 있게 두고, 시간 드롭다운과 서버가 막습니다.
+    }
+    calendar.refresh();
+    if (fullDates.has(fields.date.value)) {
+      clearSelectedDate('이 날짜는 모든 시간의 예약이 완료되었습니다. 다른 날짜를 선택해 주세요.');
+    }
+  };
+  refreshFullDates();
 
   // 공휴일은 캘린더를 그린 뒤 받아서 반영합니다.
   const holidayStatus = $('holiday-status');
@@ -175,12 +204,7 @@ const bootstrap = async () => {
       calendar.refresh();
       // 공휴일 정보가 오기 전에 공휴일을 골랐다면 선택을 풀어 줍니다.
       if (holidays[fields.date.value]) {
-        setError('date', `공휴일(${holidays[fields.date.value]})에는 예약할 수 없습니다. 다른 날짜를 선택해 주세요.`);
-        fields.date.value = '';
-        dateBox.value = '';
-        calendar.clear();
-        resetTimeSelect('날짜를 먼저 선택해 주세요');
-        updateSubmitState();
+        clearSelectedDate(`공휴일(${holidays[fields.date.value]})에는 예약할 수 없습니다. 다른 날짜를 선택해 주세요.`);
       }
     })
     .catch((error) => {
@@ -258,6 +282,7 @@ const bootstrap = async () => {
         `${formatKoreanDate(created.date)} ${created.time} 방문 예약 신청이 접수되었습니다. ` +
         `확인 후 ${created.email} 로 답장드릴게요.`;
       showDialogStep('done');
+      refreshFullDates();
       resetForm();
     } catch (error) {
       if (error.status === 400 && error.details) {
@@ -265,7 +290,10 @@ const bootstrap = async () => {
         showErrors(error.details);
       } else {
         $('confirm-error').textContent = error.status ? error.message : NETWORK_ERROR;
-        if (error.status === 409) loadTimes(fields.date.value);
+        if (error.status === 409) {
+          loadTimes(fields.date.value);
+          refreshFullDates();
+        }
       }
       button.disabled = false;
     } finally {

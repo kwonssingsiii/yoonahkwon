@@ -74,13 +74,18 @@ const loadSettings = async () => {
   return settings;
 };
 
-const buildSlots = async (date, settings, now) => {
-  const booked = new Set(await reservationRepository.findBookedTimes(date));
-  return settings.timeSlots.map((time) => ({
-    time,
-    available: !booked.has(time) && !(date === now.date && time <= now.time),
-  }));
-};
+/**
+ * 시간대별 예약 가능 여부.
+ *   reason: 'booked' — 이미 예약 완료(취소가 아닌 예약이 있음) · 'past' — 오늘 이미 지난 시간
+ */
+const slotsFor = (date, settings, now, booked) =>
+  settings.timeSlots.map((time) => {
+    const reason = booked.has(time) ? 'booked' : date === now.date && time <= now.time ? 'past' : null;
+    return { time, available: !reason, reason };
+  });
+
+const buildSlots = async (date, settings, now) =>
+  slotsFor(date, settings, now, new Set(await reservationRepository.findBookedTimes(date)));
 
 /** 문자열이 아닌 값이 와도 검증 단계에서 터지지 않도록 필드를 다듬어 맞춥니다. */
 const TEXT_FIELDS = ['name', 'email', 'purpose', 'date', 'time'];
@@ -126,6 +131,30 @@ export const reservationService = {
     };
   },
 
+  /**
+   * 예약 가능 기간(오늘 ~ maxDaysAhead) 중 남은 시간이 하나도 없는 날짜.
+   * 캘린더가 이 날짜들을 "예약 마감" 으로 막습니다. (주말은 제외, 공휴일은 프론트가 따로 막음)
+   */
+  async getFullDates() {
+    const settings = await loadSettings();
+    const now = nowInSeoul();
+    const to = addDays(now.date, settings.maxDaysAhead);
+
+    const bookedByDate = new Map();
+    (await reservationRepository.findBookedSlots(now.date, to)).forEach(({ date, time }) => {
+      if (!bookedByDate.has(date)) bookedByDate.set(date, new Set());
+      bookedByDate.get(date).add(time);
+    });
+
+    const fullDates = [];
+    for (let date = now.date; date <= to; date = addDays(date, 1)) {
+      if (settings.closedWeekdays.includes(toUtcDate(date).getUTCDay())) continue;
+      const slots = slotsFor(date, settings, now, bookedByDate.get(date) ?? new Set());
+      if (!slots.some((s) => s.available)) fullDates.push(date);
+    }
+    return { from: now.date, to, fullDates };
+  },
+
   async create(payload) {
     const settings = await loadSettings();
     const now = nowInSeoul();
@@ -136,9 +165,14 @@ export const reservationService = {
       throw ApiError.badRequest('입력값을 확인해 주세요.', errors);
     }
 
+    // 1차 확인(친절한 안내용). 동시에 들어온 요청은 저장소(DB 유니크 인덱스)가 최종으로 막고 409 를 돌려줍니다.
     const slot = (await buildSlots(input.date, settings, now)).find((s) => s.time === input.time);
     if (!slot.available) {
-      throw ApiError.conflict('이미 예약되었거나 지난 시간입니다. 다른 시간을 선택해 주세요.');
+      throw ApiError.conflict(
+        slot.reason === 'booked'
+          ? '이미 예약이 완료된 시간입니다. 다른 시간을 선택해 주세요.'
+          : '이미 지난 시간입니다. 다른 시간을 선택해 주세요.',
+      );
     }
 
     return reservationRepository.create(input);

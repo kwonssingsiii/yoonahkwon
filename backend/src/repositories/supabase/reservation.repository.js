@@ -4,6 +4,7 @@
  * 테이블 · 권한은 Supabase 쪽에 이렇게 잡혀 있습니다.
  *   - public.reservations : RLS 로 "추가만 가능, 조회 불가" → 예약자 개인정보는 대시보드에서만 봅니다.
  *   - public.booked_times(p_date) : 해당 날짜에 예약된 시간만 돌려주는 함수 (빈 시간 계산용)
+ *   - public.booked_slots(p_from, p_to) : 기간 안의 예약된 날짜 · 시간 (캘린더의 "예약 마감" 날짜 계산용)
  *   - (visit_date, visit_time) 유니크 인덱스 : 동시에 같은 시간을 잡아도 하나만 들어갑니다.
  */
 import config from '../../config/index.js';
@@ -50,6 +51,12 @@ export const supabaseReservationRepository = {
   async findBookedTimes(date) {
     const times = await request('/rpc/booked_times', { p_date: date });
     return times.map((t) => String(t).slice(0, 5)); // "13:00:00" → "13:00"
+  },
+
+  /** 기간 안에 이미 예약된 날짜 · 시간 [{ date: '2026-10-07', time: '13:00' }, ...] */
+  async findBookedSlots(from, to) {
+    const slots = await request('/rpc/booked_slots', { p_from: from, p_to: to });
+    return slots.map((s) => ({ date: s.visit_date, time: String(s.visit_time).slice(0, 5) }));
   },
 };
 
