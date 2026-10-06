@@ -8,7 +8,6 @@ import renderAwards from './awards.js';
 import renderSkills from './skills.js';
 import renderContact from './contact.js';
 import renderLocation from './location.js';
-import renderReservation from './reservation.js';
 import renderFooter from './footer.js';
 
 const renderers = [
@@ -21,7 +20,6 @@ const renderers = [
   renderSkills,
   renderContact,
   renderLocation,
-  renderReservation,
   renderFooter,
 ];
 

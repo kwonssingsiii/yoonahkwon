@@ -1082,154 +1082,10 @@ body.is-loading #app {
   font-size: 0.9rem;
 }
 
-/* =========================================
-   RESERVATION (방문 예약)
-   ========================================= */
-.reservation-form {
-  max-width: 760px;
-  margin: 0 auto;
-  background: var(--clr-surface);
-  border: 1px solid var(--clr-border);
-  border-radius: var(--radius-lg);
-  padding: 2.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-}
-
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  border: 0;
-  min-width: 0;
-}
-
-.form-field label,
-.form-field legend {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--clr-text);
-  margin-bottom: 0.4rem;
-}
-
-.required { color: var(--clr-primary); }
-
-.form-field input,
-.form-field select,
-.form-field textarea {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background: var(--clr-bg);
-  border: 1px solid var(--clr-border);
-  border-radius: var(--radius-sm);
-  color: var(--clr-text);
-  font-family: var(--font-main);
-  font-size: 0.95rem;
-  color-scheme: dark;
-  transition: border-color var(--transition), box-shadow var(--transition);
-}
-
-.form-field textarea { resize: vertical; }
-
-.form-field input:focus,
-.form-field select:focus,
-.form-field textarea:focus {
-  outline: none;
-  border-color: var(--clr-primary);
-  box-shadow: 0 0 0 3px rgba(74, 181, 105, 0.2);
-}
-
-.field-error {
-  min-height: 1.2em;
-  font-size: 0.8rem;
-  color: #f28b82;
-}
-
-.slot-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-  gap: 0.6rem;
-}
-
-.slot-hint {
-  grid-column: 1 / -1;
-  color: var(--clr-text-muted);
-  font-size: 0.9rem;
-}
-
-.slot input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.slot span {
-  display: block;
-  padding: 0.6rem 0;
-  text-align: center;
-  background: var(--clr-bg);
-  border: 1px solid var(--clr-border);
-  border-radius: var(--radius-sm);
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--clr-text);
-  cursor: pointer;
-  transition: background var(--transition), border-color var(--transition);
-}
-
-.slot:hover span { border-color: var(--clr-primary); }
-
-.slot input:checked + span {
-  background: var(--clr-primary);
-  border-color: var(--clr-primary);
-  color: #fff;
-}
-
-.slot input:focus-visible + span {
-  box-shadow: 0 0 0 3px rgba(74, 181, 105, 0.35);
-}
-
-.slot.is-disabled span {
-  opacity: 0.35;
-  text-decoration: line-through;
-  cursor: not-allowed;
-}
-
-.reservation-submit {
-  align-self: center;
-  border: none;
-  cursor: pointer;
-}
-
-.reservation-submit:disabled {
-  opacity: 0.6;
-  cursor: wait;
-  transform: none;
-}
-
-.form-status {
-  text-align: center;
-  font-size: 0.95rem;
-  min-height: 1.5em;
-  color: var(--clr-text-muted);
-}
-
-.form-status[data-type="success"] { color: var(--clr-primary); }
-.form-status[data-type="error"] { color: #f28b82; }
-
 @media (max-width: 768px) {
-  .location-grid,
-  .form-row { grid-template-columns: 1fr; }
+  .location-grid { grid-template-columns: 1fr; }
   .location-map,
   .location-map iframe { min-height: 280px; }
-  .reservation-form { padding: 1.75rem 1.25rem; }
   .section-intro { margin-top: -2rem; }
 }
 
@@ -1253,3 +1109,412 @@ body.is-loading #app {
 }
 
 .subpage-back:hover { color: var(--clr-primary); }
+
+/* =========================================
+   RESERVATION PAGE (reservation.html)
+   ========================================= */
+.reserve {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.reserve-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.reserve-card {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.reserve-step {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--clr-white);
+}
+
+.reserve-step span {
+  display: inline-grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  background: rgba(74, 181, 105, 0.18);
+  color: var(--clr-primary);
+  font-size: 0.85rem;
+}
+
+/* ── 폼 공통 ── */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.form-field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--clr-text);
+}
+
+.required { color: var(--clr-primary); }
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--clr-bg);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  color: var(--clr-text);
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  color-scheme: dark;
+  transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+}
+
+.form-field textarea { resize: vertical; line-height: 1.7; }
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  outline: none;
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 3px rgba(74, 181, 105, 0.2);
+}
+
+.form-field select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder { color: rgba(138, 171, 147, 0.5); }
+
+/* 오른쪽 입력칸(이름 · 이메일 · 방문 목적)은 다른 칸보다 크게 */
+.form-field-lg label { font-size: 1rem; }
+
+.form-field-lg input,
+.form-field-lg textarea {
+  padding: 1rem 1.2rem;
+  font-size: 1.1rem;
+  border-radius: var(--radius-md);
+}
+
+.form-field-lg input { min-height: 3.6rem; }
+
+/* 잘못 입력한 칸: 빨간 테두리 + 아래 안내 */
+.form-field .is-invalid,
+.form-field .is-invalid:focus {
+  border-color: #f28b82;
+  background: rgba(242, 139, 130, 0.08);
+  box-shadow: 0 0 0 3px rgba(242, 139, 130, 0.18);
+}
+
+.field-error {
+  min-height: 1.2em;
+  font-size: 0.82rem;
+  color: #f28b82;
+}
+
+.field-error:empty { min-height: 0; }
+
+.field-hint {
+  font-size: 0.82rem;
+  color: var(--clr-gold);
+}
+
+.field-counter {
+  align-self: flex-end;
+  font-size: 0.75rem;
+  color: var(--clr-text-muted);
+}
+
+.date-box {
+  font-weight: 700;
+  cursor: default;
+}
+
+.date-box:not(:placeholder-shown) {
+  border-color: rgba(74, 181, 105, 0.5);
+  color: var(--clr-accent);
+}
+
+/* ── 캘린더 ── */
+.calendar {
+  background: var(--clr-bg);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.calendar-title {
+  font-size: 1rem;
+  color: var(--clr-white);
+}
+
+.calendar-nav {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  border: 1px solid var(--clr-border);
+  background: transparent;
+  color: var(--clr-text);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.calendar-nav:hover:not(:disabled) {
+  background: rgba(74, 181, 105, 0.15);
+  border-color: var(--clr-primary);
+}
+
+.calendar-nav:disabled { opacity: 0.25; cursor: not-allowed; }
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.3rem;
+  text-align: center;
+}
+
+.calendar-weekday {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--clr-text-muted);
+  padding: 0.3rem 0;
+}
+
+.calendar-weekday.is-sun { color: #f28b82; }
+.calendar-weekday.is-sat { color: #70c0ee; }
+
+.calendar-day {
+  aspect-ratio: 1;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: rgba(74, 181, 105, 0.08);
+  color: var(--clr-text);
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition), color var(--transition);
+}
+
+.calendar-day:hover:not(:disabled) {
+  border-color: var(--clr-primary);
+  background: rgba(74, 181, 105, 0.2);
+}
+
+.calendar-day:focus-visible {
+  outline: 2px solid var(--clr-primary);
+  outline-offset: 2px;
+}
+
+.calendar-day:disabled {
+  background: transparent;
+  color: rgba(138, 171, 147, 0.35);
+  cursor: not-allowed;
+}
+
+.calendar-day.is-holiday:disabled {
+  color: rgba(242, 139, 130, 0.55);
+  text-decoration: line-through;
+}
+
+.calendar-day.is-today { border-color: rgba(74, 181, 105, 0.45); }
+
+.calendar-day.is-selected,
+.calendar-day.is-selected:hover {
+  background: var(--clr-primary);
+  border-color: var(--clr-primary);
+  color: #fff;
+}
+
+.calendar-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  font-size: 0.75rem;
+  color: var(--clr-text-muted);
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 3px;
+  background: rgba(74, 181, 105, 0.35);
+}
+
+.legend-dot.is-off { background: rgba(138, 171, 147, 0.15); }
+
+/* ── 동의 · 예약하기 ── */
+.reserve-submit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 2rem;
+  text-align: center;
+}
+
+.consent {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  color: var(--clr-text);
+  cursor: pointer;
+  text-align: left;
+}
+
+.consent input {
+  flex-shrink: 0;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: 0.2rem;
+  accent-color: var(--clr-primary);
+  cursor: pointer;
+}
+
+.reserve-button {
+  border: none;
+  cursor: pointer;
+  min-width: 180px;
+  justify-content: center;
+}
+
+.reserve-button:disabled,
+.reserve-button:disabled:hover {
+  background: rgba(138, 171, 147, 0.25);
+  color: rgba(232, 245, 236, 0.5);
+  box-shadow: none;
+  transform: none;
+  cursor: not-allowed;
+}
+
+.submit-hint {
+  font-size: 0.8rem;
+  color: var(--clr-text-muted);
+  min-height: 1.2em;
+}
+
+.reserve-sources { margin-top: 1rem; text-align: right; }
+
+/* ── 최종 확인 팝업 ── */
+.confirm-dialog {
+  width: min(520px, calc(100% - 32px));
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  background: var(--clr-surface);
+  color: var(--clr-text);
+  box-shadow: var(--shadow-card), var(--shadow-glow);
+}
+
+.confirm-dialog::backdrop {
+  background: rgba(5, 8, 7, 0.75);
+  backdrop-filter: blur(4px);
+}
+
+.confirm-body {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.confirm-body[hidden] { display: none; }
+
+.confirm-title {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--clr-white);
+}
+
+.confirm-list {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.6rem 1.25rem;
+  background: var(--clr-bg);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+}
+
+.confirm-list dt {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--clr-primary);
+}
+
+.confirm-list dd {
+  font-size: 0.95rem;
+  color: var(--clr-text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.confirm-message {
+  color: var(--clr-text-muted);
+  line-height: 1.8;
+}
+
+.confirm-error {
+  font-size: 0.88rem;
+  color: #f28b82;
+}
+
+.confirm-error:empty { display: none; }
+
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.confirm-cancel {
+  cursor: pointer;
+  font-family: var(--font-main);
+}
+
+@media (max-width: 860px) {
+  .reserve-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .reserve-card,
+  .reserve-submit,
+  .confirm-body { padding: 1.5rem 1.25rem; }
+  .confirm-actions > * { flex: 1; }
+}

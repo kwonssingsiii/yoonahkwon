@@ -19,14 +19,15 @@ export const createApp = ({ serveFrontend = false } = {}) => {
 
   app.use(express.json({ limit: '1mb' }));
   app.use(
-    cors({
-      origin(origin, callback) {
-        // 같은 출처 요청(origin 없음)과 허용 목록에 있는 출처만 통과시킵니다.
-        if (!origin || config.corsOrigins.includes(origin) || config.corsOrigins.includes('*')) {
-          return callback(null, true);
-        }
-        return callback(new Error(`CORS 차단된 출처: ${origin}`));
-      },
+    cors((req, callback) => {
+      const origin = req.header('Origin');
+      // 브라우저는 같은 출처의 POST · 모듈 스크립트에도 Origin 을 붙이므로, 호스트가 같으면 항상 허용합니다.
+      // (Vercel 배포 · 미리보기 주소를 CORS_ORIGIN 에 일일이 넣지 않아도 예약 폼이 동작하도록)
+      const sameOrigin = origin && URL.canParse(origin) && new URL(origin).host === req.get('host');
+      if (!origin || sameOrigin || config.corsOrigins.includes(origin) || config.corsOrigins.includes('*')) {
+        return callback(null, { origin: true });
+      }
+      return callback(new Error(`CORS 차단된 출처: ${origin}`));
     }),
   );
 

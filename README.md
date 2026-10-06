@@ -97,7 +97,8 @@ npm run dev          # http://localhost:4000
 | POST | `/api/contact/messages` | 문의 메시지 등록 |
 | GET | `/api/contact/messages` | 문의 메시지 목록 |
 | GET | `/api/reservations/availability?date=YYYY-MM-DD` | 날짜별 예약 가능 시간 |
-| POST | `/api/reservations` | 방문 예약 신청 (중복 시간이면 409) |
+| POST | `/api/reservations` | 방문 예약 신청 — name · email · purpose · date · time · consent (중복 시간이면 409) |
+| GET | `/api/holidays?year=2026` | 한국 공휴일 (Nager.Date, 하루 캐시) |
 | GET | `/api/weather` | 찾아오는 길 주소 기준 현재 기온 · 습도 (Open-Meteo, 10분 캐시) |
 
 ---
@@ -128,9 +129,15 @@ npm run dev          # http://localhost:4000
 `backend/src/data/portfolio.json` 의 두 항목에서 바꿉니다.
 
 - `location` — `placeName`, `address`, `mapQuery`(지도 검색어, 비우면 주소 사용), `coordinates`(날씨 조회 위도·경도), `directions`(지하철·버스·주차 안내)
-- `reservation` — `timeSlots`(예약 시간대), `closedWeekdays`(휴무 요일, 0=일 ~ 6=토), `maxDaysAhead`(며칠 뒤까지 예약 가능), `purposes`(방문 목적)
+- `reservation` — `timeSlots`(희망 시간 목록), `durationMinutes`(상담 시간), `closedWeekdays`(휴무 요일, 0=일 ~ 6=토), `maxDaysAhead`(며칠 뒤까지 예약 가능). 공휴일은 자동으로 막힙니다.
 
-> ⚠️ 예약은 지금 메모리에만 저장되어 서버가 재시작되면 사라집니다. 실제로 예약을 받기 전에 `repositories/mongo/reservation.repository.js` 를 채워 영구 저장소로 옮기세요.
+### 예약 확인하기 (운영자)
+
+예약은 Supabase 프로젝트 **yoonahkwon-portfolio** 의 `reservations` 테이블에 저장됩니다.
+Supabase 대시보드 → Table Editor → `reservations` 에서 볼 수 있습니다. (`status` 를 `confirmed` / `cancelled` 로 바꿔 관리)
+
+- 방문자는 RLS 로 **추가만** 가능하고 목록은 볼 수 없습니다. 빈 시간은 `booked_times()` 함수가 시간만 돌려줍니다.
+- 로컬에서 DB 없이 시험하려면 `backend/.env` 에 `RESERVATION_STORE=json` (메모리, 재시작 시 사라짐).
 
 ### 데이터베이스 붙이기
 
