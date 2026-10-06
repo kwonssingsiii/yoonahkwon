@@ -1627,6 +1627,20 @@ body.is-loading #app {
 
 .admin-login { margin-top: 8vh; }
 
+.admin-script-error {
+  max-width: 480px;
+  margin: 1rem auto;
+  padding: 1rem 1.25rem;
+  border: 1px solid #f28b82;
+  border-radius: var(--radius-md);
+  background: rgba(242, 139, 130, 0.1);
+  color: #f28b82;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.admin-script-error[hidden] { display: none; }
+
 .admin-login-form {
   display: flex;
   flex-direction: column;

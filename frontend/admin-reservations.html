@@ -54,6 +54,17 @@
     </div>
   </main>
 
+  <!-- 관리자 스크립트가 아예 실행되지 못하면(구형 브라우저 · 차단 등) 빈 화면 대신 안내를 보여 줍니다. -->
+  <p class="admin-script-error" id="admin-script-error" role="alert" hidden>
+    관리자 화면 스크립트를 불러오지 못했습니다. 브라우저를 최신 버전으로 업데이트하거나,
+    광고 · 스크립트 차단 확장 프로그램을 끈 뒤 새로고침해 주세요.
+  </p>
+  <script nomodule>document.getElementById('admin-script-error').hidden = false;</script>
+  <script>
+    setTimeout(function () {
+      if (!window.__adminReady) document.getElementById('admin-script-error').hidden = false;
+    }, 6000);
+  </script>
   <script type="module" src="/src/js/admin/reservations.js"></script>
 </body>
 </html>
