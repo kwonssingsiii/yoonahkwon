@@ -22,6 +22,11 @@ export const config = {
   requestTimeoutMs: 8000,
   /** API 가 죽어도 페이지가 비지 않도록 번들된 로컬 데이터로 대체할지 여부 */
   useFallbackData: true,
+  /**
+   * 예약 알림 메일을 보낼 Formspree 폼 주소.
+   * 받는 이메일 주소는 코드가 아니라 Formspree 대시보드의 폼 설정에서 정합니다.
+   */
+  formspreeEndpoint: 'https://formspree.io/f/myekzzkq',
 };
 
 export default config;

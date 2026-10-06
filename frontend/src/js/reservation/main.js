@@ -8,6 +8,7 @@
 import portfolioApi from '../api/portfolio.api.js';
 import reservationApi from '../api/reservation.api.js';
 import holidayApi from '../api/holiday.api.js';
+import formspreeApi from '../api/formspree.api.js';
 import { escapeHtml, setText } from '../render/dom.js';
 import createCalendar from './calendar.js';
 import { addDays, formatKoreanDate, formatTimeRange, todayInSeoul, weekdayOf } from './dates.js';
@@ -246,6 +247,13 @@ const bootstrap = async () => {
 
     try {
       const created = await reservationApi.create(payload());
+
+      // 저장(중복 시간 확인 포함)이 끝난 예약만 운영자 메일로 보냅니다.
+      // 메일이 실패해도 예약은 이미 Supabase 에 저장되어 있으므로 방문자에게는 접수로 안내합니다.
+      await formspreeApi
+        .sendReservation({ ...created, place: placeName })
+        .catch((error) => console.warn('[reservation] 알림 메일 전송 실패:', error.message));
+
       $('confirm-done-message').textContent =
         `${formatKoreanDate(created.date)} ${created.time} 방문 예약 신청이 접수되었습니다. ` +
         `확인 후 ${created.email} 로 답장드릴게요.`;

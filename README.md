@@ -138,6 +138,8 @@ Supabase 대시보드 → Table Editor → `reservations` 에서 볼 수 있습�
 
 - 방문자는 RLS 로 **추가만** 가능하고 목록은 볼 수 없습니다. 빈 시간은 `booked_times()` 함수가 시간만 돌려줍니다.
 - 로컬에서 DB 없이 시험하려면 `backend/.env` 에 `RESERVATION_STORE=json` (메모리, 재시작 시 사라짐).
+- 예약이 저장되면 브라우저가 **Formspree**(`frontend/src/js/config.js` 의 `formspreeEndpoint`)로 알림 메일을 보냅니다.
+  받는 주소는 Formspree 대시보드의 폼 설정에서 바꿉니다. 메일에서 "답장" 을 누르면 예약자 이메일로 회신됩니다.
 
 ### 데이터베이스 붙이기
 
