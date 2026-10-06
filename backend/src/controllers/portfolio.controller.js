@@ -10,6 +10,7 @@ export const portfolioController = {
   getSkills: async (req, res) => ok(res, await portfolioService.getSkills()),
   getContact: async (req, res) => ok(res, await portfolioService.getContact()),
   getMeta: async (req, res) => ok(res, await portfolioService.getMeta()),
+  getLocation: async (req, res) => ok(res, await portfolioService.getLocation()),
 
   getAwards: async (req, res) => ok(res, await portfolioService.getAwards({ tag: req.query.tag })),
   getAwardById: async (req, res) => ok(res, await portfolioService.getAwardById(req.params.id)),

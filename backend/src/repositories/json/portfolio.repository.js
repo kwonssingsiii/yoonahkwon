@@ -45,6 +45,12 @@ export const jsonPortfolioRepository = {
   async findContact() {
     return (await load()).contact;
   },
+  async findLocation() {
+    return (await load()).location;
+  },
+  async findReservationSettings() {
+    return (await load()).reservation;
+  },
   async findMeta() {
     return (await load()).meta;
   },

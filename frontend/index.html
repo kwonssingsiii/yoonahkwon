@@ -109,6 +109,84 @@
       </div>
     </section>
 
+    <!-- Location -->
+    <section class="section section-dark" id="location">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Location</span>
+          <h2 class="section-title">찾아오는 길</h2>
+        </div>
+        <p class="section-intro" id="location-intro"><!-- render/location.js --></p>
+        <div class="location-grid">
+          <div class="location-map" id="location-map"><!-- render/location.js --></div>
+          <div class="location-info" id="location-info"><!-- render/location.js --></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reservation -->
+    <section class="section" id="reservation">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Reservation</span>
+          <h2 class="section-title">방문 예약</h2>
+        </div>
+        <p class="section-intro" id="reservation-intro"><!-- render/reservation.js --></p>
+
+        <!-- 입력 칸은 고정 마크업, 선택지(목적 · 날짜 범위)는 render/reservation.js, 동작은 ui/reservation.js -->
+        <form class="reservation-form" id="reservation-form" novalidate>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="reservation-name">이름 <span class="required">*</span></label>
+              <input type="text" id="reservation-name" name="name" autocomplete="name" required />
+              <p class="field-error" data-error-for="name"></p>
+            </div>
+            <div class="form-field">
+              <label for="reservation-email">이메일 <span class="required">*</span></label>
+              <input type="email" id="reservation-email" name="email" autocomplete="email" required />
+              <p class="field-error" data-error-for="email"></p>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="reservation-phone">연락처</label>
+              <input type="tel" id="reservation-phone" name="phone" autocomplete="tel" placeholder="010-0000-0000" />
+              <p class="field-error" data-error-for="phone"></p>
+            </div>
+            <div class="form-field">
+              <label for="reservation-purpose">방문 목적 <span class="required">*</span></label>
+              <select id="reservation-purpose" name="purpose" required><!-- render/reservation.js --></select>
+              <p class="field-error" data-error-for="purpose"></p>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="reservation-date">날짜 <span class="required">*</span></label>
+            <input type="date" id="reservation-date" name="date" required />
+            <p class="field-error" data-error-for="date"></p>
+          </div>
+
+          <fieldset class="form-field">
+            <legend>시간 <span class="required">*</span></legend>
+            <div class="slot-grid" id="reservation-slots">
+              <p class="slot-hint">날짜를 먼저 선택해 주세요.</p>
+            </div>
+            <p class="field-error" data-error-for="time"></p>
+          </fieldset>
+
+          <div class="form-field">
+            <label for="reservation-message">메모</label>
+            <textarea id="reservation-message" name="message" rows="4" maxlength="500" placeholder="미리 알려주실 내용이 있다면 적어 주세요."></textarea>
+            <p class="field-error" data-error-for="message"></p>
+          </div>
+
+          <button type="submit" class="btn-primary reservation-submit" id="reservation-submit">예약 신청하기</button>
+          <p class="form-status" id="reservation-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
     <!-- Footer -->
     <footer class="footer">
       <div class="footer-inner" id="footer-inner"><!-- render/footer.js --></div>

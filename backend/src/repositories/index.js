@@ -15,15 +15,19 @@ import jsonPortfolioRepository from './json/portfolio.repository.js';
 import jsonMessageRepository from './json/message.repository.js';
 import mongoPortfolioRepository from './mongo/portfolio.repository.js';
 import mongoMessageRepository from './mongo/message.repository.js';
+import jsonReservationRepository from './json/reservation.repository.js';
+import mongoReservationRepository from './mongo/reservation.repository.js';
 
 const registry = {
   json: {
     portfolio: jsonPortfolioRepository,
     message: jsonMessageRepository,
+    reservation: jsonReservationRepository,
   },
   mongo: {
     portfolio: mongoPortfolioRepository,
     message: mongoMessageRepository,
+    reservation: mongoReservationRepository,
   },
 };
 
@@ -37,4 +41,5 @@ if (!selected) {
 
 export const portfolioRepository = selected.portfolio;
 export const messageRepository = selected.message;
+export const reservationRepository = selected.reservation;
 export const activeDataSource = config.dataSource;

@@ -77,6 +77,28 @@
     ]
   },
 
+  "location": {
+    "intro": "직접 만나 포트폴리오와 작업 이야기를 나누고 싶으시다면 아래 장소로 찾아와 주세요.",
+    "placeName": "",
+    "address": "",
+    "mapQuery": "",
+    "directions": [
+      { "id": "location-subway", "icon": "🚇", "label": "지하철", "value": "가까운 역과 출구 정보를 입력해 주세요." },
+      { "id": "location-bus", "icon": "🚌", "label": "버스", "value": "정류장과 노선 정보를 입력해 주세요." },
+      { "id": "location-parking", "icon": "🅿️", "label": "주차", "value": "주차 가능 여부를 입력해 주세요." }
+    ],
+    "note": "방문 전 아래에서 예약해 주시면 시간에 맞춰 기다리고 있을게요."
+  },
+
+  "reservation": {
+    "intro": "원하는 날짜와 시간을 골라 방문 상담을 예약해 주세요. 확인 후 이메일로 연락드립니다.",
+    "durationMinutes": 60,
+    "timeSlots": ["10:00", "11:00", "13:00", "14:00", "15:00", "16:00"],
+    "closedWeekdays": [0, 6],
+    "maxDaysAhead": 30,
+    "purposes": ["포트폴리오 상담", "공모전 협업 문의", "프로젝트 제안", "기타"]
+  },
+
   "meta": {
     "title": "권윤아 | 그린스마트시티학과 포트폴리오",
     "description": "상명대학교 그린스마트시티학과 3학년 권윤아의 개인 포트폴리오 웹사이트입니다. 도시숲과 전통조경대전 공모전 참여 이력을 담고 있습니다.",
@@ -85,7 +107,9 @@
       { "href": "#about", "label": "소개" },
       { "href": "#education", "label": "학력" },
       { "href": "#awards", "label": "공모전" },
-      { "href": "#contact", "label": "연락처" }
+      { "href": "#contact", "label": "연락처" },
+      { "href": "#location", "label": "찾아오는 길" },
+      { "href": "#reservation", "label": "예약" }
     ]
   }
 }

@@ -55,6 +55,12 @@ export const mongoPortfolioRepository = {
   async findContact() {
     return notImplemented('findContact');
   },
+  async findLocation() {
+    return notImplemented('findLocation');
+  },
+  async findReservationSettings() {
+    return notImplemented('findReservationSettings');
+  },
   async findMeta() {
     return notImplemented('findMeta');
   },

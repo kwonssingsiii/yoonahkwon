@@ -2,6 +2,7 @@
 import { Router } from 'express';
 import portfolioRoutes from './portfolio.routes.js';
 import contactRoutes from './contact.routes.js';
+import reservationRoutes from './reservation.routes.js';
 import { activeDataSource } from '../repositories/index.js';
 import config from '../config/index.js';
 
@@ -16,5 +17,6 @@ router.get('/health', (_req, res) => {
 
 router.use('/portfolio', portfolioRoutes);
 router.use('/contact', contactRoutes);
+router.use('/reservations', reservationRoutes);
 
 export default router;

@@ -18,6 +18,7 @@ export const portfolioService = {
   getSkills: () => portfolioRepository.findSkills(),
   getContact: () => portfolioRepository.findContact(),
   getMeta: () => portfolioRepository.findMeta(),
+  getLocation: () => portfolioRepository.findLocation(),
 
   /** 공모전 목록 — tag 쿼리스트링으로 필터링할 수 있습니다. */
   async getAwards({ tag } = {}) {

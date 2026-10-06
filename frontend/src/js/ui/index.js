@@ -8,6 +8,7 @@ import initParticles from './particles.js';
 import initTilt from './tilt.js';
 import initProgressBar from './progress.js';
 import initSmoothScroll from './smoothScroll.js';
+import initReservation from './reservation.js';
 
 export const initUI = () => {
   initNavbar();
@@ -16,7 +17,8 @@ export const initUI = () => {
   initParticles();
   initReveal();
   initTilt();
+  initReservation();
 };
 
-export { initNavbar, initReveal, initParticles, initTilt, initProgressBar, initSmoothScroll };
+export { initNavbar, initReveal, initParticles, initTilt, initProgressBar, initSmoothScroll, initReservation };
 export default initUI;

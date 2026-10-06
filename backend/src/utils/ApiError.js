@@ -11,6 +11,10 @@ export class ApiError extends Error {
     return new ApiError(400, message, details);
   }
 
+  static conflict(message) {
+    return new ApiError(409, message);
+  }
+
   static notFound(message = '요청한 리소스를 찾을 수 없습니다.') {
     return new ApiError(404, message);
   }
