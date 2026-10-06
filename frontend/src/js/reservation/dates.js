@@ -9,7 +9,18 @@ export const toDate = (iso) => new Date(`${iso}T00:00:00Z`);
 
 export const toIso = (date) => date.toISOString().slice(0, 10);
 
-export const todayInSeoul = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date());
+/**
+ * 브라우저마다 en-CA 등의 날짜 "문자열" 형식이 달라(YYYY-MM-DD 또는 M/D/YYYY) format() 결과에 기대지 않고,
+ * 연 · 월 · 일 조각을 꺼내 직접 조립합니다.
+ */
+export const todayInSeoul = () => {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' })
+      .formatToParts(new Date())
+      .map(({ type, value }) => [type, value]),
+  );
+  return `${parts.year}-${parts.month}-${parts.day}`;
+};
 
 export const addDays = (iso, days) => {
   const d = toDate(iso);
