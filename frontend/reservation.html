@@ -4,7 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>방문 예약 | 권윤아 포트폴리오</title>
-  <meta name="description" content="권윤아 포트폴리오 — 상명대학교 천안캠퍼스 C404a 방문 예약 페이지입니다." />
+  <meta name="description" content="권윤아 포트폴리오 — 상명대학교 천안캠퍼스 C404a 방문 상담 예약 페이지입니다." />
+
+  <!-- index.html 과 같은 규칙: 비우면 API 주소를 자동 판별합니다. -->
+  <meta name="api-base" content="" />
 
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
 
@@ -26,16 +29,110 @@
     </div>
   </nav>
 
-  <!-- Reservation (내용은 피드백 후 구성 예정) -->
   <section class="section subpage" id="reservation">
     <div class="container">
       <div class="section-header">
         <span class="section-tag">Reservation</span>
         <h1 class="section-title">방문 예약</h1>
       </div>
-      <!-- TODO: 예약 폼 · 안내 내용 -->
+      <p class="section-intro" id="reservation-intro"><!-- reservation/main.js --></p>
+
+      <!-- 칸 구성은 고정 마크업, 동작은 src/js/reservation/*.js -->
+      <form class="reserve" id="reservation-form" novalidate>
+        <div class="reserve-grid">
+
+          <!-- 왼쪽: 캘린더 · 선택한 날짜 · 희망 시간 -->
+          <div class="reserve-card">
+            <h2 class="reserve-step"><span>1</span> 날짜 · 시간 선택</h2>
+
+            <div class="calendar" id="calendar" aria-label="예약 날짜 선택 캘린더"><!-- reservation/calendar.js --></div>
+            <p class="calendar-legend">
+              <span class="legend-dot"></span> 선택 가능 ·
+              <span class="legend-dot is-off"></span> 주말 · 공휴일 · 지난 날짜
+            </p>
+            <p class="field-hint" id="holiday-status" hidden></p>
+
+            <div class="form-field">
+              <label for="selected-date">선택한 날짜 <span class="required">*</span></label>
+              <input type="text" id="selected-date" class="date-box" readonly placeholder="캘린더에서 날짜를 눌러 주세요" />
+              <input type="hidden" name="date" id="reservation-date" />
+              <p class="field-error" data-error-for="date"></p>
+            </div>
+
+            <div class="form-field">
+              <label for="reservation-time">희망 시간 <span class="required">*</span></label>
+              <select id="reservation-time" name="time" disabled>
+                <option value="">날짜를 먼저 선택해 주세요</option>
+              </select>
+              <p class="field-error" data-error-for="time"></p>
+            </div>
+          </div>
+
+          <!-- 오른쪽: 이름 · 이메일 · 방문 목적 -->
+          <div class="reserve-card">
+            <h2 class="reserve-step"><span>2</span> 연락처 · 방문 목적</h2>
+
+            <div class="form-field form-field-lg">
+              <label for="reservation-name">이름 <span class="required">*</span></label>
+              <input type="text" id="reservation-name" name="name" autocomplete="name" maxlength="50" placeholder="홍길동" />
+              <p class="field-error" data-error-for="name"></p>
+            </div>
+
+            <div class="form-field form-field-lg">
+              <label for="reservation-email">답장받을 이메일 <span class="required">*</span></label>
+              <input type="email" id="reservation-email" name="email" autocomplete="email" maxlength="254"
+                     placeholder="name@example.com" aria-describedby="email-error" />
+              <p class="field-error" id="email-error" data-error-for="email"></p>
+            </div>
+
+            <div class="form-field form-field-lg">
+              <label for="reservation-purpose">방문 목적 <span class="required">*</span></label>
+              <textarea id="reservation-purpose" name="purpose" rows="6" maxlength="500"
+                        placeholder="예) 도시숲 공모전 작업에 대해 이야기 나누고 싶습니다."></textarea>
+              <p class="field-counter"><span id="purpose-count">0</span> / 500</p>
+              <p class="field-error" data-error-for="purpose"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 동의 · 예약하기 -->
+        <div class="reserve-submit">
+          <label class="consent">
+            <input type="checkbox" name="consent" id="reservation-consent" />
+            <span>입력 정보를 예약 상담 목적으로 운영자에게 전달하는 것에 동의합니다</span>
+          </label>
+          <p class="field-error" data-error-for="consent"></p>
+
+          <button type="submit" class="btn-primary reserve-button" id="reservation-submit" disabled>예약하기</button>
+          <p class="submit-hint" id="submit-hint" aria-live="polite"></p>
+        </div>
+      </form>
+
+      <p class="location-sources reserve-sources">
+        출처 · 공휴일: <a href="https://date.nager.at/" target="_blank" rel="noopener">Nager.Date</a>
+      </p>
     </div>
   </section>
+
+  <!-- 최종 확인 팝업 -->
+  <dialog class="confirm-dialog" id="confirm-dialog" aria-labelledby="confirm-title">
+    <div class="confirm-body" id="confirm-review">
+      <h2 class="confirm-title" id="confirm-title">예약 내용을 확인해 주세요</h2>
+      <dl class="confirm-list" id="confirm-list"><!-- reservation/main.js --></dl>
+      <p class="confirm-error" id="confirm-error" role="alert"></p>
+      <div class="confirm-actions">
+        <button type="button" class="btn-outline confirm-cancel" id="confirm-cancel">수정하기</button>
+        <button type="button" class="btn-primary reserve-button" id="confirm-submit">예약하기</button>
+      </div>
+    </div>
+    <div class="confirm-body" id="confirm-done" hidden>
+      <h2 class="confirm-title">예약 신청이 접수되었습니다 🌿</h2>
+      <p class="confirm-message" id="confirm-done-message"></p>
+      <div class="confirm-actions">
+        <button type="button" class="btn-primary reserve-button" id="confirm-close">확인</button>
+      </div>
+    </div>
+  </dialog>
 
   <!-- Footer -->
   <footer class="footer">
@@ -46,5 +143,6 @@
     </div>
   </footer>
 
+  <script type="module" src="/src/js/reservation/main.js"></script>
 </body>
 </html>

@@ -33,6 +33,23 @@ export const config = {
     name: process.env.DATABASE_NAME ?? 'portfolio',
   },
 
+  /**
+   * 방문 예약 저장소. 'supabase' | 'json'
+   * 기본값은 supabase — Vercel 서버리스에서도 예약이 사라지지 않습니다.
+   * 로컬에서 DB 없이 시험할 때는 RESERVATION_STORE=json (메모리, 재시작 시 사라짐).
+   */
+  reservationStore: process.env.RESERVATION_STORE ?? 'supabase',
+
+  /**
+   * Supabase 접속 정보. publishable 키는 브라우저에 노출돼도 되는 공개 키이고,
+   * reservations 테이블은 RLS 로 "추가만 가능 · 조회 불가" 로 막혀 있어 기본값으로 둡니다.
+   * 조회 권한이 있는 secret/service_role 키는 절대 여기에 넣지 마세요.
+   */
+  supabase: {
+    url: process.env.SUPABASE_URL ?? 'https://tzvbuggdqoekgocxqxaz.supabase.co',
+    key: process.env.SUPABASE_PUBLISHABLE_KEY ?? 'sb_publishable_Otc9MamUF-N1JlSNaLYoqw_Rl9nixHP',
+  },
+
   /** 외부 API 연동용 자리. services/external/ 에서 사용합니다. */
   external: {
     baseUrl: process.env.EXTERNAL_API_BASE_URL ?? '',

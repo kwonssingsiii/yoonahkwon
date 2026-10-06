@@ -35,8 +35,8 @@ export const request = async (path, { method = 'GET', body, query, signal } = {}
 
     const payload = await response.json().catch(() => null);
 
-    if (!response.ok || payload?.success === false) {
-      throw new ApiError(payload?.error?.message ?? `요청 실패 (${response.status})`, {
+    if (!response.ok || payload?.success === false || payload === null) {
+      throw new ApiError(payload?.error?.message ?? `요청 실패 (${response.status}, JSON 이 아닌 응답)`, {
         status: response.status,
         details: payload?.error?.details,
       });

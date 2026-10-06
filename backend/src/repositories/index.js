@@ -16,18 +16,16 @@ import jsonMessageRepository from './json/message.repository.js';
 import mongoPortfolioRepository from './mongo/portfolio.repository.js';
 import mongoMessageRepository from './mongo/message.repository.js';
 import jsonReservationRepository from './json/reservation.repository.js';
-import mongoReservationRepository from './mongo/reservation.repository.js';
+import supabaseReservationRepository from './supabase/reservation.repository.js';
 
 const registry = {
   json: {
     portfolio: jsonPortfolioRepository,
     message: jsonMessageRepository,
-    reservation: jsonReservationRepository,
   },
   mongo: {
     portfolio: mongoPortfolioRepository,
     message: mongoMessageRepository,
-    reservation: mongoReservationRepository,
   },
 };
 
@@ -41,5 +39,18 @@ if (!selected) {
 
 export const portfolioRepository = selected.portfolio;
 export const messageRepository = selected.message;
-export const reservationRepository = selected.reservation;
+
+/** 예약은 포트폴리오 데이터와 따로 RESERVATION_STORE 로 고릅니다. (포트폴리오는 JSON, 예약은 Supabase) */
+const reservationRegistry = {
+  supabase: supabaseReservationRepository,
+  json: jsonReservationRepository,
+};
+
+export const reservationRepository = reservationRegistry[config.reservationStore];
+if (!reservationRepository) {
+  throw new Error(
+    `알 수 없는 RESERVATION_STORE: "${config.reservationStore}". 사용 가능한 값: ${Object.keys(reservationRegistry).join(', ')}`,
+  );
+}
+export const activeReservationStore = config.reservationStore;
 export const activeDataSource = config.dataSource;

@@ -1,23 +1,21 @@
 /**
- * 방문 예약 저장소 (JSON/메모리 구현).
- * 서버가 재시작되면 사라집니다 — Vercel 서버리스에서는 인스턴스마다 따로 저장되므로
- * 실제 운영 전에는 반드시 mongo 등 영구 저장소 구현체로 교체하세요.
+ * 방문 예약 저장소 (JSON/메모리 구현) — 로컬에서 DB 없이 시험할 때만 씁니다. (RESERVATION_STORE=json)
+ * 서버가 재시작되면 사라집니다. 실제 예약은 supabase 구현체에 저장됩니다.
  */
 import { randomUUID } from 'node:crypto';
 
 const reservations = [];
 
 export const jsonReservationRepository = {
-  async create({ name, email, phone, date, time, purpose, message }) {
+  async create({ name, email, purpose, date, time, consent }) {
     const record = {
       id: randomUUID(),
       name,
       email,
-      phone,
+      purpose,
       date,
       time,
-      purpose,
-      message,
+      consent,
       status: 'pending',
       createdAt: new Date().toISOString(),
     };
@@ -25,9 +23,9 @@ export const jsonReservationRepository = {
     return record;
   },
 
-  /** 해당 날짜의 예약 목록. 빈 시간 계산에 사용합니다. */
-  async findByDate(date) {
-    return reservations.filter((r) => r.date === date && r.status !== 'cancelled');
+  /** 해당 날짜에 이미 예약된 시간 ['13:00', ...] */
+  async findBookedTimes(date) {
+    return reservations.filter((r) => r.date === date && r.status !== 'cancelled').map((r) => r.time);
   },
 };
 

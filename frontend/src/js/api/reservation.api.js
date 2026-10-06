@@ -3,8 +3,8 @@ import api from './client.js';
 
 export const reservationApi = {
   getAvailability: (date) => api.get('/reservations/availability', { query: { date } }),
-  create: ({ name, email, phone, date, time, purpose, message }) =>
-    api.post('/reservations', { name, email, phone, date, time, purpose, message }),
+  create: ({ name, email, purpose, date, time, consent }) =>
+    api.post('/reservations', { name, email, purpose, date, time, consent }),
 };
 
 export default reservationApi;
