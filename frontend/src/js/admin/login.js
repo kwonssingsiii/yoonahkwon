@@ -1,5 +1,8 @@
 /** 관리자 로그인 · 홈 (admin.html) */
-import { getSession, isAdmin, renderAdminHeader, supabase } from './session.js';
+import { auth, getSession, isAdmin, renderAdminHeader } from './session.js';
+
+// 여기까지 왔다면 모든 모듈을 불러온 것 — HTML 의 안내 타이머가 오류 문구를 띄우지 않습니다.
+window.__adminReady = true;
 
 const $ = (id) => document.getElementById(id);
 
@@ -24,6 +27,7 @@ const showHome = async (session) => {
 const init = async () => {
   const session = await getSession();
   if (session) {
+    $('admin-login').hidden = true;
     const next = nextUrl();
     if (next) {
       window.location.replace(next);
@@ -33,7 +37,6 @@ const init = async () => {
     return;
   }
 
-  $('admin-login').hidden = false;
   const form = $('admin-login-form');
   const error = $('admin-login-error');
   const button = form.querySelector('button[type="submit"]');
@@ -44,25 +47,26 @@ const init = async () => {
     button.disabled = true;
     button.textContent = '로그인 중…';
 
-    const { data, error: authError } = await supabase.auth.signInWithPassword({
-      email: form.elements.email.value.trim(),
-      password: form.elements.password.value,
-    });
-
-    button.disabled = false;
-    button.textContent = '로그인';
-
-    if (authError) {
+    let session;
+    try {
+      session = await auth.signInWithPassword({
+        email: form.elements.email.value.trim(),
+        password: form.elements.password.value,
+      });
+    } catch (authError) {
       error.textContent =
-        authError.message === 'Invalid login credentials'
+        authError.code === 'invalid_credentials'
           ? '이메일 또는 비밀번호가 올바르지 않습니다.'
           : `로그인하지 못했습니다. (${authError.message})`;
       return;
+    } finally {
+      button.disabled = false;
+      button.textContent = '로그인';
     }
 
     const next = nextUrl();
     if (next) window.location.replace(next);
-    else showHome(data.session);
+    else showHome(session);
   });
 };
 

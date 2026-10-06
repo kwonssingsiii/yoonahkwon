@@ -4,7 +4,7 @@
  */
 import { escapeHtml } from '../render/dom.js';
 import { formatKoreanDate } from '../reservation/dates.js';
-import { renderAdminHeader, requireAdmin, supabase } from './session.js';
+import { db, renderAdminHeader, requireAdmin } from './session.js';
 
 /** 처리 상태 4가지 — DB 값 ↔ 화면 이름 */
 export const STATUSES = [
@@ -16,6 +16,9 @@ export const STATUSES = [
 const labelOf = (value) => STATUSES.find((s) => s.value === value)?.label ?? value;
 
 const COLUMNS = 'id, reservation_no, name, email, visit_date, visit_time, purpose, status, created_at';
+
+// 여기까지 왔다면 모든 모듈을 불러온 것 — HTML 의 안내 타이머가 오류 문구를 띄우지 않습니다.
+window.__adminReady = true;
 
 const $ = (id) => document.getElementById(id);
 
@@ -118,9 +121,7 @@ const init = async () => {
   };
 
   const load = async () => {
-    const { data, error } = await supabase.from('reservations').select(COLUMNS).order('created_at', { ascending: false });
-    if (error) throw error;
-    rows = data;
+    rows = await db.select('reservations', { columns: COLUMNS, order: 'created_at.desc' });
     render();
   };
 
@@ -143,14 +144,10 @@ const init = async () => {
     tr.querySelectorAll('.status-action').forEach((b) => { b.disabled = true; });
     setMessage('');
 
-    const { data, error } = await supabase
-      .from('reservations')
-      .update({ status: next })
-      .eq('id', row.id)
-      .select(COLUMNS)
-      .single();
-
-    if (error) {
+    let data;
+    try {
+      data = await db.updateById('reservations', row.id, { status: next }, { columns: COLUMNS });
+    } catch (error) {
       setMessage(
         error.code === '23505'
           ? `${row.reservation_no}: 같은 시간에 이미 다른 예약이 있어 "${labelOf(next)}"(으)로 바꿀 수 없습니다.`
