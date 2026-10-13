@@ -7,10 +7,11 @@
 # 의존성
 node_modules/
 
-# 환경변수 (.env.example 만 커밋합니다)
+# 환경변수 — 열쇠가 들어 있으므로 절대 커밋하지 않습니다. (.env.example 만 커밋)
 .env
-.env.local
+.env.*
 *.env
+!.env.example
 
 # 빌드 / 배포
 .vercel/

@@ -11,17 +11,18 @@
 
 ```bash
 npm install
-cp backend/.env.example backend/.env
+cp backend/.env.example backend/.env   # SUPABASE_URL · SUPABASE_PUBLISHABLE_KEY 채우기
 npm run dev          # http://localhost:4000
 ```
 
-프론트엔드와 API가 같은 주소에서 함께 뜹니다.
+프론트엔드와 API가 같은 주소에서 함께 뜹니다. 포트폴리오 내용은 Supabase 에서 읽습니다.
+DB 없이 시험하려면 `backend/.env` 에서 `DATA_SOURCE=json`, `RESERVATION_STORE=json`.
 
 | 스크립트 | 설명 |
 |---|---|
 | `npm run dev` | 개발 서버 (파일 변경 시 자동 재시작) |
 | `npm start` | 운영 모드 실행 |
-| `npm run sync:fallback` | 데이터 수정 후 프론트 fallback 파일 동기화 |
+| `npm run sync:fallback` | Supabase 내용 → 프론트 fallback 파일 동기화 (`-- --json` 이면 portfolio.json 에서) |
 
 ---
 
@@ -65,14 +66,19 @@ npm run dev          # http://localhost:4000
 │       │   └── external/        외부 API 호출용 공통 클라이언트
 │       ├── repositories/        ★ 데이터 저장소 (교체 지점)
 │       │   ├── index.js             DATA_SOURCE 값으로 구현체 선택
-│       │   ├── json/                기본: JSON 파일
+│       │   ├── supabase/            ★ 기본: Supabase (포트폴리오 · 예약)
+│       │   ├── json/                예비: JSON 파일 (DB 없이 시험용)
 │       │   └── mongo/               MongoDB 자리 (미구현)
-│       ├── data/portfolio.json  ★ 모든 내용이 담긴 원본 데이터
+│       ├── data/portfolio.json  예비 데이터 (원본은 Supabase 테이블)
 │       ├── middlewares/
 │       └── utils/
 │
 ├── api/index.js                 Vercel 서버리스 진입점
 ├── scripts/sync-fallback.js
+├── supabase/
+│   ├── migrations/              테이블 · 뷰 · 권한 변경 기록 (실행 순서대로)
+│   └── setup_all.sql            새 프로젝트를 한 번에 세우는 SQL (migrations 를 이어 붙인 것)
+├── docs/DB연결-가이드.md        DB 구조 · 사용법 쉬운 설명서
 └── vercel.json
 ```
 
@@ -107,36 +113,34 @@ npm run dev          # http://localhost:4000
 
 ### 내용 수정 (공모전 추가 등)
 
-`backend/src/data/portfolio.json` 만 고치면 됩니다. HTML은 건드릴 필요 없습니다.
+Supabase 대시보드 → **Table Editor** 에서 고칩니다. HTML · 코드는 건드릴 필요 없습니다. (최대 1분 뒤 반영)
 
-```jsonc
-"awards": [
-  {
-    "id": "award-card-3",
-    "number": "03",
-    "icon": "🌸",
-    "title": "새 공모전",
-    "description": "설명...",
-    "tags": ["태그1", "태그2"]
-  }
-]
-```
+| 고칠 것 | 테이블 |
+|---|---|
+| 이름 · 학교 · 소개글 | `profiles` |
+| 학력 · 공모전 · 관심 분야 · 연락처 | `educations` · `awards` · `skills` · `contacts` |
+| 태그 / 태그 붙이기 | `tags` / `profile_tags` · `award_tags` |
+| 페이지 제목 · 상단 메뉴 | `site_meta` · `nav_items` |
+| 숨기기 | 줄은 `is_public`, 칸은 `column_visibility` |
+
+공모전 추가 예: `awards` 에 `id=award-card-3`, `profile_id=kwon-yuna`, `title`, `description`, `sort_order=3` 한 줄,
+태그는 `award_tags` 에 `award_id=award-card-3`, `tag_id=tag-1` 처럼 한 줄씩. 번호(01, 02 …)는 `sort_order` 순으로 자동.
 
 수정 후 `npm run sync:fallback` 을 실행해 프론트 예비 데이터도 맞춰 주세요.
 
 ### 찾아오는 길 · 예약 설정
 
-`backend/src/data/portfolio.json` 의 두 항목에서 바꿉니다.
+Supabase 의 두 테이블에서 바꿉니다.
 
-- `location` — `placeName`, `address`, `mapQuery`(지도 검색어, 비우면 주소 사용), `coordinates`(날씨 조회 위도·경도), `directions`(지하철·버스·주차 안내)
-- `reservation` — `timeSlots`(희망 시간 목록), `durationMinutes`(상담 시간), `closedWeekdays`(휴무 요일, 0=일 ~ 6=토), `maxDaysAhead`(며칠 뒤까지 예약 가능). 공휴일은 자동으로 막힙니다.
+- `locations` — `place_name`, `address`, `map_query`(지도 검색어, 비우면 주소 사용), `lat` · `lon`(날씨 조회 위도·경도), `directions`(지하철·버스·주차 안내)
+- `reservation_settings` — `time_slots`(희망 시간 목록), `duration_minutes`(상담 시간), `closed_weekdays`(휴무 요일, 0=일 ~ 6=토), `max_days_ahead`(며칠 뒤까지 예약 가능). 공휴일은 자동으로 막힙니다.
 
 ### 관리자 화면 (`/admin.html`)
 
 로그인 후 오른쪽 위 **예약하기관리** 탭 → `/admin-reservations.html` 에서 예약 목록을 보고
 처리 상태(접수 · 확정 · 변경 요청 · 취소)를 버튼으로 바꿉니다.
 
-- 처음 한 번: `supabase/migrations/20261006_admin_reservations.sql` 을 Supabase SQL Editor 에서 실행
+- 처음 한 번: 새 프로젝트라면 `supabase/setup_all.sql` 을 Supabase SQL Editor 에서 실행
 - 관리자 계정: Supabase → Authentication → Users → Add user (관리자 이메일 + 비밀번호, Auto Confirm)
 - 관리자 추가: `insert into public.admins (email) values ('new@example.com');`
 - 예약번호 `R261007-1330-A1B2` = 방문 날짜 · 시간 + 이름/이메일 코드 (같은 사람도 방문 시간별로 다름)
@@ -151,20 +155,26 @@ Supabase 대시보드 → Table Editor → `reservations` 에서 볼 수 있습�
 - 예약이 저장되면 브라우저가 **Formspree**(`frontend/src/js/config.js` 의 `formspreeEndpoint`)로 알림 메일을 보냅니다.
   받는 주소는 Formspree 대시보드의 폼 설정에서 바꿉니다. 메일에서 "답장" 을 누르면 예약자 이메일로 회신됩니다.
 
-### 데이터베이스 붙이기
+### 데이터베이스 (Supabase — 기본 저장소)
 
-화면·라우트·서비스 코드는 **한 줄도 바뀌지 않습니다.** 저장소 구현체만 채우면 됩니다.
-
-1. `cd backend && npm i mongodb`
-2. `backend/src/repositories/mongo/portfolio.repository.js` 의 `TODO` 를 실제 쿼리로 교체
-3. `backend/.env` 수정
+포트폴리오 내용 · 예약은 Supabase 프로젝트 **yoonahkwon-portfolio** 에 있습니다.
+열쇠는 `backend/.env` (배포는 Vercel 환경변수) 에 넣습니다. **`.env` 는 커밋하지 않습니다.**
 
 ```env
-DATA_SOURCE=mongo
-DATABASE_URL=mongodb+srv://...
+DATA_SOURCE=supabase          # 기본값 (json 으로 바꾸면 portfolio.json 예비 데이터)
+SUPABASE_URL=https://<프로젝트ID>.supabase.co
+SUPABASE_PUBLISHABLE_KEY=sb_publishable_...   # secret 키 금지
 ```
 
-PostgreSQL 등 다른 DB도 같습니다 — `repositories/postgres/` 에 동일한 메서드 이름으로 구현하고, `repositories/index.js` 의 `registry` 에 한 줄 추가하면 됩니다.
+관리자 화면은 브라우저에서 Supabase 에 바로 붙으므로 `frontend/src/js/config.js` 의 `supabase` 값도 같은 프로젝트로 맞춰 둡니다.
+
+- 테이블 · 공개용 뷰 · 권한: `supabase/migrations/20261013_*.sql`
+- 백엔드 구현체: `backend/src/repositories/supabase/portfolio.repository.js`
+- 행(`is_public`) · 열(`column_visibility`) 단위로 공개/비공개를 켜고 끕니다.
+- 쉬운 설명서: [docs/DB연결-가이드.md](docs/DB연결-가이드.md)
+
+MongoDB 등 다른 DB 도 같은 방식입니다 — `repositories/<이름>/` 에 동일한 메서드 이름으로 구현하고,
+`repositories/index.js` 의 `registry` 에 한 줄 추가하면 됩니다.
 
 ### 외부 API 붙이기
 

@@ -1,6 +1,6 @@
 /**
- * JSON 파일 기반 포트폴리오 저장소 (기본 구현).
- * data/portfolio.json 을 읽습니다. DB 가 없어도 서비스가 동작하도록 하는 역할입니다.
+ * JSON 파일 기반 포트폴리오 저장소 (예비용 — DATA_SOURCE=json 일 때만).
+ * data/portfolio.json 을 읽습니다. 원본 데이터는 Supabase 이며, 이 파일은 DB 없이 시험할 때 씁니다.
  */
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
