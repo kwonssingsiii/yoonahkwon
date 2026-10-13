@@ -21,11 +21,12 @@ export const config = {
     .filter(Boolean),
 
   /**
-   * 데이터 저장소 종류. 'json' | 'mongo'
-   * DB 를 붙이는 순간 .env 에서 DATA_SOURCE=mongo 로만 바꾸면 됩니다.
+   * 데이터 저장소 종류. 'supabase' | 'json' | 'mongo'
+   * 기본값은 supabase — 포트폴리오 내용의 원본은 Supabase 테이블입니다.
+   * DB 없이 시험할 때만 DATA_SOURCE=json (backend/src/data/portfolio.json, 예비용).
    * (repositories/index.js 가 이 값을 보고 구현체를 고릅니다.)
    */
-  dataSource: process.env.DATA_SOURCE ?? 'json',
+  dataSource: process.env.DATA_SOURCE ?? 'supabase',
 
   /** DB 접속 정보 — DATA_SOURCE 가 json 이 아닐 때만 사용됩니다. */
   db: {
@@ -41,13 +42,12 @@ export const config = {
   reservationStore: process.env.RESERVATION_STORE ?? 'supabase',
 
   /**
-   * Supabase 접속 정보. publishable 키는 브라우저에 노출돼도 되는 공개 키이고,
-   * reservations 테이블은 RLS 로 "추가만 가능 · 조회 불가" 로 막혀 있어 기본값으로 둡니다.
-   * 조회 권한이 있는 secret/service_role 키는 절대 여기에 넣지 마세요.
+   * Supabase 접속 정보 — backend/.env (배포는 Vercel 환경변수) 에서만 읽습니다.
+   * publishable 키만 넣으세요. 조회 권한이 있는 secret/service_role 키는 절대 넣지 마세요.
    */
   supabase: {
-    url: process.env.SUPABASE_URL ?? 'https://tzvbuggdqoekgocxqxaz.supabase.co',
-    key: process.env.SUPABASE_PUBLISHABLE_KEY ?? 'sb_publishable_Otc9MamUF-N1JlSNaLYoqw_Rl9nixHP',
+    url: (process.env.SUPABASE_URL ?? '').trim().replace(/\/$/, ''),
+    key: (process.env.SUPABASE_PUBLISHABLE_KEY ?? '').trim(),
   },
 
   /** 외부 API 연동용 자리. services/external/ 에서 사용합니다. */
@@ -57,5 +57,20 @@ export const config = {
     timeoutMs: toInt(process.env.EXTERNAL_API_TIMEOUT_MS, 8000),
   },
 };
+
+/** Supabase 를 쓰도록 골랐는데 열쇠가 비어 있으면, 요청이 실패하기 전에 서버 시작 단계에서 알려 줍니다. */
+const usesSupabase = config.dataSource === 'supabase' || config.reservationStore === 'supabase';
+const validUrl = /^https:\/\/[a-z0-9]+\.supabase\.co$/.test(config.supabase.url);
+const validKey = /^(sb_publishable_|eyJ)[\w.-]+$/.test(config.supabase.key) || config.supabase.key.startsWith('sb_secret_');
+if (usesSupabase && (!validUrl || !validKey)) {
+  throw new Error(
+    'SUPABASE_URL 또는 SUPABASE_PUBLISHABLE_KEY 가 비어 있거나 예시 값 그대로입니다. ' +
+      'backend/.env 에 Supabase 대시보드 → Project Settings → API Keys 의 값을 넣어 주세요. ' +
+      '(DB 없이 시험하려면 DATA_SOURCE=json, RESERVATION_STORE=json)',
+  );
+}
+if (usesSupabase && config.supabase.key.startsWith('sb_secret_')) {
+  throw new Error('SUPABASE_PUBLISHABLE_KEY 에 secret 키가 들어 있습니다. sb_publishable_ 로 시작하는 키로 바꿔 주세요.');
+}
 
 export default config;

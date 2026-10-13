@@ -30,10 +30,11 @@ export const config = {
   /**
    * 관리자 화면(admin*.html)이 로그인 · 예약 조회에 쓰는 Supabase.
    * publishable 키는 공개용이며, 예약 조회 · 상태 변경은 RLS 로 관리자 계정만 가능합니다.
+   * 브라우저는 .env 를 읽을 수 없으므로 backend/.env 의 값과 같게 여기에도 적어 둡니다.
    */
   supabase: {
-    url: 'https://tzvbuggdqoekgocxqxaz.supabase.co',
-    publishableKey: 'sb_publishable_Otc9MamUF-N1JlSNaLYoqw_Rl9nixHP',
+    url: 'https://tbbaymbseclozlkwttti.supabase.co',
+    publishableKey: 'sb_publishable_D0UVW1RNvjwf2KI12YLxlQ_obL-ZPtZ',
   },
 };
 

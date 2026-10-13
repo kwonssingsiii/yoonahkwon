@@ -17,6 +17,7 @@ import mongoPortfolioRepository from './mongo/portfolio.repository.js';
 import mongoMessageRepository from './mongo/message.repository.js';
 import jsonReservationRepository from './json/reservation.repository.js';
 import supabaseReservationRepository from './supabase/reservation.repository.js';
+import supabasePortfolioRepository from './supabase/portfolio.repository.js';
 
 const registry = {
   json: {
@@ -26,6 +27,11 @@ const registry = {
   mongo: {
     portfolio: mongoPortfolioRepository,
     message: mongoMessageRepository,
+  },
+  /** 포트폴리오는 Supabase 의 *_public 뷰에서 읽습니다. 문의 메시지는 아직 메모리 저장. */
+  supabase: {
+    portfolio: supabasePortfolioRepository,
+    message: jsonMessageRepository,
   },
 };
 
@@ -40,7 +46,7 @@ if (!selected) {
 export const portfolioRepository = selected.portfolio;
 export const messageRepository = selected.message;
 
-/** 예약은 포트폴리오 데이터와 따로 RESERVATION_STORE 로 고릅니다. (포트폴리오는 JSON, 예약은 Supabase) */
+/** 예약은 포트폴리오 데이터와 따로 RESERVATION_STORE 로 고릅니다. (기본은 둘 다 Supabase) */
 const reservationRegistry = {
   supabase: supabaseReservationRepository,
   json: jsonReservationRepository,
