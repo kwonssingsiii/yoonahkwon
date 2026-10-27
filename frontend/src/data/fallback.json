@@ -48,7 +48,16 @@
       "icon": "🌲",
       "title": "도시숲 공모전",
       "description": "도시 환경 내 녹지 공간 조성 및 도시숲 디자인에 관한 아이디어를 발표한 공모전에 참여했습니다. 자연과 도시가 공존하는 지속 가능한 그린 인프라 계획안을 제안하였습니다.",
-      "tags": ["도시숲", "그린인프라", "생태설계"]
+      "tags": ["도시숲", "그린인프라", "생태설계"],
+      "work": {
+        "title": "고래 올림(林) — 추신. 같이 가요, 우리",
+        "summary": "과거 쓰레기 매립장이었던 울산 남구 여천동 부지(1.3ha)를 2028 울산국제정원박람회와 이어지는 '동행'의 도시숲으로 재생한 작품입니다. 울산의 상징인 고래 형상을 따라 숲을 『환영』·『함께』·『마주』·『소망』해, 우리 네 공간으로 나누고, 바람생성숲으로 도시 열섬과 미세먼지를 줄이며 미야와키 방식의 탄소중립숲과 내음숲(악취저감숲)으로 탄소 흡수와 매립지 악취 문제를 해결했습니다. 시민참여 그림길, 기업이 함께 가꾸는 어울숲(ESG), 울산의 역사를 담은 이끼벽화와 AR 스마트벤치로 시민과 기업이 함께 누리는 숲을 제안했습니다.",
+        "image": {
+          "src": "/assets/images/awards/urban-forest.jpg",
+          "large": "/assets/images/awards/urban-forest-large.jpg",
+          "alt": "고래 올림(林) 설계 판넬 — 고래 형상의 도시숲 평면도와 환영·함께·마주·소망 공간별 계획"
+        }
+      }
     },
     {
       "id": "award-card-2",
@@ -56,7 +65,33 @@
       "icon": "🏯",
       "title": "전통조경대전",
       "description": "한국의 전통 조경 미학과 현대 도시 설계를 융합한 작품으로 전통조경대전에 참여하였습니다. 우리 고유의 정원 문화와 자연관을 현대적 언어로 재해석하는 작업을 수행하였습니다.",
-      "tags": ["전통조경", "한국정원", "문화유산"]
+      "tags": ["전통조경", "한국정원", "문화유산"],
+      "work": {
+        "title": "書路(서로) : 나를 읽는 길",
+        "summary": "국립중앙도서관 곁에, 선조들이 책을 읽던 태도를 오늘의 방문자가 직접 경험하는 정원 '書路(서로)'를 제안한 작품입니다. 율곡 이이 『격몽요결』 「독서장」의 독서 순서를 따라 정원을 진입 → 숙독(혼자 읽는 자리) → 체득(자연 속 성찰) → 실천(함께 나누는 자리)으로 구성하고, 보길도 부용동 원림과 담양 소쇄원의 공간 위계를 현대적으로 재해석했습니다. 능화판 문양 담장으로 책을 열고 닫는 흐름을 만들고, 방지무도 지당과 현폭, 누각 틀, 유리지당 위 원도와 대화에 반응하는 인터랙티브 조명으로 혼자의 독서가 서로의 대화로 이어지는 과정을 담았습니다.",
+        "image": {
+          "src": "/assets/images/awards/traditional-landscape/page-01.jpg",
+          "alt": "書路(서로) 작품 설명집 표지 — 노을 진 산과 굽은 길 위에서 책을 읽는 선비"
+        },
+        "booklet": {
+          "pages": [
+            "/assets/images/awards/traditional-landscape/page-01.jpg",
+            "/assets/images/awards/traditional-landscape/page-02.jpg",
+            "/assets/images/awards/traditional-landscape/page-03.jpg",
+            "/assets/images/awards/traditional-landscape/page-04.jpg",
+            "/assets/images/awards/traditional-landscape/page-05.jpg",
+            "/assets/images/awards/traditional-landscape/page-06.jpg",
+            "/assets/images/awards/traditional-landscape/page-07.jpg",
+            "/assets/images/awards/traditional-landscape/page-08.jpg",
+            "/assets/images/awards/traditional-landscape/page-09.jpg",
+            "/assets/images/awards/traditional-landscape/page-10.jpg",
+            "/assets/images/awards/traditional-landscape/page-11.jpg",
+            "/assets/images/awards/traditional-landscape/page-12.jpg",
+            "/assets/images/awards/traditional-landscape/page-13.jpg",
+            "/assets/images/awards/traditional-landscape/page-14.jpg"
+          ]
+        }
+      }
     }
   ],
 

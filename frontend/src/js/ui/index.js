@@ -9,6 +9,8 @@ import initTilt from './tilt.js';
 import initProgressBar from './progress.js';
 import initSmoothScroll from './smoothScroll.js';
 import initWeather from './weather.js';
+import initLightbox from './lightbox.js';
+import initFlipbook from './flipbook.js';
 
 export const initUI = () => {
   initNavbar();
@@ -18,7 +20,9 @@ export const initUI = () => {
   initReveal();
   initTilt();
   initWeather();
+  initLightbox();
+  initFlipbook();
 };
 
-export { initNavbar, initReveal, initParticles, initTilt, initProgressBar, initSmoothScroll, initWeather };
+export { initNavbar, initReveal, initParticles, initTilt, initProgressBar, initSmoothScroll, initWeather, initLightbox, initFlipbook };
 export default initUI;

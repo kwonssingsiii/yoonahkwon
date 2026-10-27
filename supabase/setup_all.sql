@@ -4,16 +4,29 @@
 -- 사용법: Supabase 대시보드 → SQL Editor → New query → 이 파일 전체 붙여넣기 → Run
 --   - 빈 새 프로젝트에서 "한 번만" 실행하세요. (두 번 실행하면 "already exists" 오류)
 --   - begin ~ commit 으로 묶여 있어, 중간에 오류가 나면 아무것도 바뀌지 않습니다.
+--   - 이미 운영 중인 프로젝트에는 이 파일 대신 새로 추가된 migrations 파일만 실행하세요.
 --
--- 이 파일은 supabase/migrations/ 의 파일들을 실행 순서대로 이어 붙인 것입니다.
---   1) 20261006_create_reservations.sql   예약 테이블
---   2) 20261006_booked_slots_range.sql    예약 캘린더 함수
---   3) 20261006_admin_reservations.sql    관리자 명단 · 예약 상태 관리
---   4) 20261013_01 ~ 09                   포트폴리오 DB (DB연결)
+-- ※ 자동 생성 파일입니다. 직접 고치지 말고 migrations 를 고친 뒤 `npm run build:setup-sql`.
+--
+-- 포함된 파일 (실행 순서):
+--    1) 20261006_create_reservations.sql
+--    2) 20261006_booked_slots_range.sql
+--    3) 20261006_admin_reservations.sql
+--    4) 20261013_01_column_visibility.sql
+--    5) 20261013_02_profiles.sql
+--    6) 20261013_03_tags.sql
+--    7) 20261013_04_profile_items.sql
+--    8) 20261013_05_junctions.sql
+--    9) 20261013_06_rls.sql
+--   10) 20261013_07_public_views.sql
+--   11) 20261013_08_seed.sql
+--   12) 20261013_09_fix_is_col_public.sql
+--   13) 20261027_01_award_works.sql
+--   14) 20261027_02_award_work_urban_forest.sql
+--   15) 20261027_03_award_work_traditional_landscape.sql
 -- =====================================================================
 
 begin;
-
 
 
 -- ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
@@ -736,6 +749,117 @@ insert into public.column_visibility (table_name, column_name, is_public) values
 
 alter function public.is_col_public(text, text) security definer;
 grant execute on function public.is_col_public(text, text) to anon, authenticated;
+
+
+-- ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+-- 파일: migrations/20261027_01_award_works.sql
+-- ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+
+-- =====================================================================
+-- 공모전 출품작 정보 — 작품명 · 간략 설명 · 사진 한 장
+--
+--   awards.work_title   출품작 이름
+--   awards.work_summary 출품작 간략 설명
+--   awards.image_url       카드에 보이는 사진 주소 (예: /assets/images/awards/urban-forest.jpg)
+--   awards.image_large_url 사진을 눌렀을 때 크게 보여 줄 선명한 사진 (비우면 image_url 사용)
+--   awards.image_alt    사진 설명 (화면 낭독기 · 이미지가 안 뜰 때 보이는 글)
+--   awards.booklet_pages 작품 설명집 페이지 그림 주소 목록 — 있으면 표지를 눌렀을 때 책처럼 넘겨 봄
+--
+-- 여섯 칸 모두 column_visibility 스위치로 켜고 끌 수 있습니다. (처음엔 공개)
+-- 뷰는 기존 열 뒤에 새 열을 덧붙이는 것이라 create or replace 로 바꿀 수 있습니다.
+-- =====================================================================
+
+alter table public.awards
+  add column work_title   text,
+  add column work_summary text,
+  add column image_url    text,
+  add column image_large_url text,
+  add column image_alt    text,
+  add column booklet_pages text[];
+
+create or replace view public.awards_public with (security_invoker = false) as
+select
+  id, profile_id, icon, title, sort_order,
+  case when public.is_col_public('awards', 'description')  then description  end as description,
+  case when public.is_col_public('awards', 'year')         then year         end as year,
+  case when public.is_col_public('awards', 'result')       then result       end as result,
+  case when public.is_col_public('awards', 'work_title')   then work_title   end as work_title,
+  case when public.is_col_public('awards', 'work_summary') then work_summary end as work_summary,
+  case when public.is_col_public('awards', 'image_url')    then image_url    end as image_url,
+  case when public.is_col_public('awards', 'image_alt')    then image_alt    end as image_alt,
+  case when public.is_col_public('awards', 'image_large_url') then image_large_url end as image_large_url,
+  case when public.is_col_public('awards', 'booklet_pages') then booklet_pages end as booklet_pages
+from public.awards
+where is_public;
+
+insert into public.column_visibility (table_name, column_name, is_public) values
+  ('awards', 'work_title',   true),
+  ('awards', 'work_summary', true),
+  ('awards', 'image_url',    true),
+  ('awards', 'image_alt',    true),
+  ('awards', 'image_large_url', true),
+  ('awards', 'booklet_pages', true)
+on conflict (table_name, column_name) do nothing;
+
+
+-- ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+-- 파일: migrations/20261027_02_award_work_urban_forest.sql
+-- ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+
+-- =====================================================================
+-- 도시숲 공모전 출품작 내용 — 「고래 올림(林)」 (제17회 대한민국 도시숲설계공모대전)
+-- 20261027_01_award_works.sql 을 먼저 실행한 뒤 실행하세요.
+-- =====================================================================
+
+update public.awards
+set
+  work_title   = '고래 올림(林) — 추신. 같이 가요, 우리',
+  work_summary = '과거 쓰레기 매립장이었던 울산 남구 여천동 부지(1.3ha)를 2028 울산국제정원박람회와 이어지는 ''동행''의 도시숲으로 재생한 작품입니다. '
+              || '울산의 상징인 고래 형상을 따라 숲을 『환영』·『함께』·『마주』·『소망』해, 우리 네 공간으로 나누고, '
+              || '바람생성숲으로 도시 열섬과 미세먼지를 줄이며 미야와키 방식의 탄소중립숲과 내음숲(악취저감숲)으로 탄소 흡수와 매립지 악취 문제를 해결했습니다. '
+              || '시민참여 그림길, 기업이 함께 가꾸는 어울숲(ESG), 울산의 역사를 담은 이끼벽화와 AR 스마트벤치로 시민과 기업이 함께 누리는 숲을 제안했습니다.',
+  image_url    = '/assets/images/awards/urban-forest.jpg',
+  image_large_url = '/assets/images/awards/urban-forest-large.jpg',
+  image_alt    = '고래 올림(林) 설계 판넬 — 고래 형상의 도시숲 평면도와 환영·함께·마주·소망 공간별 계획'
+where id = 'award-card-1';
+
+
+-- ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+-- 파일: migrations/20261027_03_award_work_traditional_landscape.sql
+-- ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+
+-- =====================================================================
+-- 전통조경대전 출품작 내용 — 「書路(서로) : 나를 읽는 길」 (2026 전통조경대전)
+-- 20261027_01_award_works.sql 을 먼저 실행한 뒤 실행하세요.
+--
+-- 작품 설명집(14쪽)은 쪽마다 그림으로 바꿔 /assets/images/awards/traditional-landscape/ 에 두었습니다.
+-- 표지(1쪽)를 누르면 책처럼 넘겨 볼 수 있습니다.
+-- 다시 만들 때: swift scripts/pdf-to-pages.swift <설명집.pdf> frontend/assets/images/awards/traditional-landscape 1600 0.78
+-- =====================================================================
+
+update public.awards
+set
+  work_title    = '書路(서로) : 나를 읽는 길',
+  work_summary  = '국립중앙도서관 곁에, 선조들이 책을 읽던 태도를 오늘의 방문자가 직접 경험하는 정원 ''書路(서로)''를 제안한 작품입니다. 율곡 이이 『격몽요결』 「독서장」의 독서 순서를 따라 정원을 진입 → 숙독(혼자 읽는 자리) → 체득(자연 속 성찰) → 실천(함께 나누는 자리)으로 구성하고, 보길도 부용동 원림과 담양 소쇄원의 공간 위계를 현대적으로 재해석했습니다. 능화판 문양 담장으로 책을 열고 닫는 흐름을 만들고, 방지무도 지당과 현폭, 누각 틀, 유리지당 위 원도와 대화에 반응하는 인터랙티브 조명으로 혼자의 독서가 서로의 대화로 이어지는 과정을 담았습니다.',
+  image_url     = '/assets/images/awards/traditional-landscape/page-01.jpg',
+  image_alt     = '書路(서로) 작품 설명집 표지 — 노을 진 산과 굽은 길 위에서 책을 읽는 선비',
+  booklet_pages = array[
+    '/assets/images/awards/traditional-landscape/page-01.jpg',
+    '/assets/images/awards/traditional-landscape/page-02.jpg',
+    '/assets/images/awards/traditional-landscape/page-03.jpg',
+    '/assets/images/awards/traditional-landscape/page-04.jpg',
+    '/assets/images/awards/traditional-landscape/page-05.jpg',
+    '/assets/images/awards/traditional-landscape/page-06.jpg',
+    '/assets/images/awards/traditional-landscape/page-07.jpg',
+    '/assets/images/awards/traditional-landscape/page-08.jpg',
+    '/assets/images/awards/traditional-landscape/page-09.jpg',
+    '/assets/images/awards/traditional-landscape/page-10.jpg',
+    '/assets/images/awards/traditional-landscape/page-11.jpg',
+    '/assets/images/awards/traditional-landscape/page-12.jpg',
+    '/assets/images/awards/traditional-landscape/page-13.jpg',
+    '/assets/images/awards/traditional-landscape/page-14.jpg'
+  ]
+where id = 'award-card-2';
 
 
 commit;

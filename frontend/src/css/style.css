@@ -681,6 +681,61 @@ body {
   margin-bottom: 1.5rem;
 }
 
+/* 출품작: 사진 · 작품명 · 간략 설명 */
+.award-work {
+  margin-bottom: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--clr-border);
+}
+
+.award-work-figure {
+  display: block;
+  margin-bottom: 1rem;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--clr-border);
+  aspect-ratio: 3 / 2;
+  background: rgba(74, 181, 105, 0.06);
+}
+
+.award-work-figure {
+  cursor: zoom-in;
+}
+
+.award-work-figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.award-work-figure:hover img {
+  transform: scale(1.03);
+}
+
+.award-work-label {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--clr-primary);
+  margin-bottom: 0.35rem;
+}
+
+.award-work-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--clr-white);
+  margin-bottom: 0.5rem;
+}
+
+.award-work-summary {
+  color: var(--clr-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.75;
+}
+
 .award-tags {
   display: flex;
   gap: 0.5rem;
@@ -696,6 +751,264 @@ body {
   font-weight: 600;
   color: var(--clr-primary);
   letter-spacing: 0.04em;
+}
+
+/* 사진 크게 보기 (라이트박스) */
+html.lightbox-open {
+  overflow: hidden;
+}
+
+.lightbox {
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--clr-white);
+}
+
+.lightbox::backdrop {
+  background: rgba(5, 10, 7, 0.96);
+}
+
+.lightbox-stage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3.5rem 1rem 3rem;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+.lightbox-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  cursor: zoom-in;
+}
+
+/* 확대: 실제 크기로 보여 주고 스크롤로 이동 */
+.lightbox.is-zoomed .lightbox-stage {
+  display: block;
+}
+
+.lightbox.is-zoomed .lightbox-img {
+  max-width: none;
+  max-height: none;
+  cursor: zoom-out;
+}
+
+.lightbox-close {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(17, 26, 20, 0.85);
+  color: var(--clr-white);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.lightbox-close:hover,
+.lightbox-close:focus-visible {
+  border-color: var(--clr-primary);
+  color: var(--clr-primary);
+}
+
+.lightbox-hint {
+  position: fixed;
+  left: 50%;
+  bottom: 0.9rem;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0.35rem 0.9rem;
+  border-radius: 100px;
+  background: rgba(17, 26, 20, 0.85);
+  color: var(--clr-text-muted);
+  font-size: 0.78rem;
+  max-width: calc(100vw - 2rem);
+  text-align: center;
+  pointer-events: none;
+}
+
+/* 설명집 표지 (책처럼 넘겨 보기) */
+.award-work-figure--book {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(74, 181, 105, 0.16), transparent 70%),
+    rgba(74, 181, 105, 0.06);
+}
+
+.award-work-figure--book img {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 2px 6px 6px 2px;
+  box-shadow:
+    -3px 0 0 rgba(0, 0, 0, 0.25) inset,
+    0 12px 28px rgba(0, 0, 0, 0.45);
+}
+
+.award-work-figure--book:hover img {
+  transform: translateY(-4px) rotate(-1deg);
+}
+
+.award-book-badge {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 100px;
+  background: rgba(17, 26, 20, 0.88);
+  border: 1px solid rgba(74, 181, 105, 0.4);
+  color: var(--clr-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* 설명집 책 넘기기 화면 */
+.flipbook {
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--clr-white);
+  display: flex;
+  flex-direction: column;
+}
+
+.flipbook:not([open]) {
+  display: none;
+}
+
+.flipbook::backdrop {
+  background: rgba(5, 10, 7, 0.96);
+}
+
+.flipbook[open] {
+  background: rgba(5, 10, 7, 0.9);
+}
+
+.flipbook-book {
+  max-width: 100%;
+  transition: transform 0.6s ease;
+}
+
+.flipbook-page {
+  background: #fff;
+  overflow: hidden;
+}
+
+.flipbook-page img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none; /* 책장을 끌어 넘길 때 그림이 끌려가지 않도록 */
+}
+
+.flipbook-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1rem 0.5rem;
+}
+
+.flipbook-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--clr-white);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.flipbook-stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.flipbook-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem 0.25rem;
+}
+
+.flipbook-counter {
+  min-width: 6.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--clr-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.flipbook-close,
+.flipbook-prev,
+.flipbook-next {
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(17, 26, 20, 0.85);
+  color: var(--clr-white);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.flipbook-close:hover,
+.flipbook-prev:hover:not(:disabled),
+.flipbook-next:hover:not(:disabled),
+.flipbook-close:focus-visible,
+.flipbook-prev:focus-visible,
+.flipbook-next:focus-visible {
+  border-color: var(--clr-primary);
+  color: var(--clr-primary);
+}
+
+.flipbook-prev:disabled,
+.flipbook-next:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.flipbook-hint {
+  margin: 0;
+  padding: 0.25rem 1rem 0.9rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--clr-text-muted);
 }
 
 /* =========================================

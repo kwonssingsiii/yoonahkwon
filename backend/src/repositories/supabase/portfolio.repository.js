@@ -117,6 +117,26 @@ const fetchAll = async () => {
         .filter(Boolean),
       ...(a.year != null ? { year: a.year } : {}),
       ...(a.result != null ? { result: a.result } : {}),
+      // 출품작 정보는 채워진 공모전에만 붙습니다. (비어 있으면 화면에서 출품작 영역이 생략됨)
+      ...(a.work_title || a.work_summary || a.image_url || a.booklet_pages?.length
+        ? {
+            work: {
+              title: text(a.work_title),
+              summary: text(a.work_summary),
+              ...(a.image_url
+                ? {
+                    image: {
+                      src: a.image_url,
+                      ...(a.image_large_url ? { large: a.image_large_url } : {}),
+                      alt: text(a.image_alt) || text(a.work_title) || a.title,
+                    },
+                  }
+                : {}),
+              // 설명집: 표지를 누르면 책처럼 넘겨 보는 페이지 그림들
+              ...(a.booklet_pages?.length ? { booklet: { pages: a.booklet_pages } } : {}),
+            },
+          }
+        : {}),
     })),
 
     skills: skills.map((s) => ({

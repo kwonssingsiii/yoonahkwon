@@ -10,7 +10,8 @@
   "scripts": {
     "dev": "npm run dev --workspace @portfolio/backend",
     "start": "npm run start --workspace @portfolio/backend",
-    "sync:fallback": "node scripts/sync-fallback.js"
+    "sync:fallback": "node scripts/sync-fallback.js",
+    "build:setup-sql": "node scripts/build-setup-sql.js"
   },
   "engines": {
     "node": ">=20"
