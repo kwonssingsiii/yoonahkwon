@@ -809,6 +809,7 @@ on conflict (table_name, column_name) do nothing;
 -- =====================================================================
 -- 도시숲 공모전 출품작 내용 — 「고래 올림(林)」 (제17회 대한민국 도시숲설계공모대전)
 -- 20261027_01_award_works.sql 을 먼저 실행한 뒤 실행하세요.
+-- 작품설명서 쪽 그림 다시 만들 때: swift scripts/pdf-to-pages.swift <작품설명서.pdf> frontend/assets/images/awards/urban-forest 1600 0.8
 -- =====================================================================
 
 update public.awards
@@ -819,8 +820,22 @@ set
               || '바람생성숲으로 도시 열섬과 미세먼지를 줄이며 미야와키 방식의 탄소중립숲과 내음숲(악취저감숲)으로 탄소 흡수와 매립지 악취 문제를 해결했습니다. '
               || '시민참여 그림길, 기업이 함께 가꾸는 어울숲(ESG), 울산의 역사를 담은 이끼벽화와 AR 스마트벤치로 시민과 기업이 함께 누리는 숲을 제안했습니다.',
   image_url    = '/assets/images/awards/urban-forest.jpg',
-  image_large_url = '/assets/images/awards/urban-forest-large.jpg',
-  image_alt    = '고래 올림(林) 설계 판넬 — 고래 형상의 도시숲 평면도와 환영·함께·마주·소망 공간별 계획'
+  image_large_url = '/assets/images/awards/urban-forest/panel.jpg',
+  image_alt    = '고래 올림(林) 설계 판넬 — 고래 형상의 도시숲 평면도와 환영·함께·마주·소망 공간별 계획',
+  -- 책으로 넘겨 보기: 1쪽 = 설계 판넬, 2~11쪽 = 작품설명서 10쪽
+  booklet_pages = array[
+    '/assets/images/awards/urban-forest/panel.jpg',
+    '/assets/images/awards/urban-forest/page-01.jpg',
+    '/assets/images/awards/urban-forest/page-02.jpg',
+    '/assets/images/awards/urban-forest/page-03.jpg',
+    '/assets/images/awards/urban-forest/page-04.jpg',
+    '/assets/images/awards/urban-forest/page-05.jpg',
+    '/assets/images/awards/urban-forest/page-06.jpg',
+    '/assets/images/awards/urban-forest/page-07.jpg',
+    '/assets/images/awards/urban-forest/page-08.jpg',
+    '/assets/images/awards/urban-forest/page-09.jpg',
+    '/assets/images/awards/urban-forest/page-10.jpg'
+  ]
 where id = 'award-card-1';
 
 

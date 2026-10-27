@@ -26,6 +26,20 @@ DB 없이 시험하려면 `backend/.env` 에서 `DATA_SOURCE=json`, `RESERVATION
 
 ---
 
+## 화면 구성
+
+1. **첫 장면 (Welcome)** — 이름과 소개 한 줄. 아무 곳이나 누르면 책장으로 넘어갑니다.
+2. **책장 (메인)** — 포트폴리오의 각 내용이 한 권의 책입니다. 책을 누르면 펼쳐져 넘겨 볼 수 있습니다.
+   소개 · 학력(한 권) · 공모전 출품작(공모전마다 한 권).
+   책장 아래에 찾아오는 길(지도 · 주소 · 현재 날씨)이 바로 보입니다.
+   책장 아래 [방문 예약하기] 버튼을 누르면 예약 페이지로 이동합니다.
+   얇은 회색 · 베이지 책은 장식(관심 태그)입니다.
+3. **책 넘기기** — PC 는 두 쪽 펼침, 휴대폰은 한 쪽씩. 책장 끝을 끌거나 ◀ ▶ · 키보드 ← → 로 넘깁니다.
+
+주소에 `#library` 를 붙이면 첫 장면 없이 바로 책장이 열립니다. (https://yoonahkwon.vercel.app/#library)
+
+---
+
 ## 폴더 구조
 
 ```
@@ -43,16 +57,19 @@ DB 없이 시험하려면 `backend/.env` 에서 `DATA_SOURCE=json`, `RESERVATION
 │           │   ├── client.js        fetch 래퍼 (타임아웃 · 에러 처리)
 │           │   ├── portfolio.api.js
 │           │   └── contact.api.js
-│           ├── render/          데이터 → HTML (섹션별 1파일)
-│           │   ├── hero.js  about.js  education.js
-│           │   ├── awards.js  skills.js  contact.js
-│           │   ├── navbar.js  footer.js  meta.js
+│           ├── render/          데이터 → HTML
+│           │   ├── welcome.js       첫 장면 (이름 · 소개 한 줄 · "책장 열기")
+│           │   ├── library.js       책장 + 책마다 쪽 만들기 (소개 · 학력 · 출품작 · 관심 분야 · 연락처 · 찾아오는 길)
+│           │   ├── meta.js          문서 제목 · 설명
 │           │   ├── dom.js           공용 헬퍼 (이스케이프 등)
 │           │   └── index.js         전체 렌더 실행
-│           └── ui/              애니메이션 · 인터랙션
-│               ├── navbar.js  particles.js  reveal.js
-│               ├── tilt.js  progress.js  smoothScroll.js
-│               └── index.js
+│           ├── ui/              애니메이션 · 인터랙션
+│           │   ├── welcome.js       첫 장면 ↔ 책장 전환 (#library, 뒤로 가기 지원)
+│           │   ├── flipbook.js      책 펼치기 · 넘기기 (그림 쪽 + 글 쪽)
+│           │   ├── shelf.js         고른 책 설명 표시
+│           │   ├── weather.js       찾아오는 길 책의 현재 날씨
+│           │   └── index.js
+│           └── vendor/          외부 라이브러리 (StPageFlip, MIT)
 │
 ├── backend/                     ← 데이터 API
 │   ├── .env.example

@@ -1,27 +1,9 @@
-/** 모든 섹션 렌더러를 순서대로 실행합니다. 섹션이 늘어나면 여기에 추가하세요. */
+/** 메인 화면 렌더러를 순서대로 실행합니다. (첫 장면 → 책장) */
 import renderMeta from './meta.js';
-import renderNavbar from './navbar.js';
-import renderHero from './hero.js';
-import renderAbout from './about.js';
-import renderEducation from './education.js';
-import renderAwards from './awards.js';
-import renderSkills from './skills.js';
-import renderContact from './contact.js';
-import renderLocation from './location.js';
-import renderFooter from './footer.js';
+import renderWelcome from './welcome.js';
+import renderLibrary from './library.js';
 
-const renderers = [
-  renderMeta,
-  renderNavbar,
-  renderHero,
-  renderAbout,
-  renderEducation,
-  renderAwards,
-  renderSkills,
-  renderContact,
-  renderLocation,
-  renderFooter,
-];
+const renderers = [renderMeta, renderWelcome, renderLibrary];
 
 export const renderAll = (data) => {
   renderers.forEach((render) => {

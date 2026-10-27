@@ -16,118 +16,47 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/src/css/style.css" />
 </head>
-<body>
+<body class="theme-paper">
 
   <div id="app">
 
-    <!-- Navigation -->
-    <nav class="navbar" id="navbar">
-      <div class="nav-container">
-        <div class="nav-logo">
-          <span class="logo-text">권윤아</span>
-          <span class="logo-dot">.</span>
-        </div>
-        <ul class="nav-links" id="nav-links"><!-- render/navbar.js --></ul>
-        <button class="hamburger" id="hamburger" aria-label="메뉴 열기">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </nav>
-
-    <!-- Hero -->
-    <section class="hero" id="hero">
-      <div class="hero-bg"></div>
-      <div class="hero-particles" id="particles"><!-- ui/particles.js --></div>
-      <div class="hero-content" id="hero-content"><!-- render/hero.js --></div>
-      <div class="hero-scroll-indicator">
-        <div class="scroll-dot"></div>
-      </div>
+    <!-- ① 첫 장면: 누르면 책장으로 (ui/welcome.js) -->
+    <section class="welcome" id="welcome" aria-label="첫 화면">
+      <div class="welcome-content" id="welcome-content"><!-- render/welcome.js --></div>
     </section>
 
-    <!-- About -->
-    <section class="section" id="about">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">About Me</span>
-          <h2 class="section-title">자기소개</h2>
-        </div>
-        <div class="about-grid" id="about-grid"><!-- render/about.js --></div>
-        <div class="bio-section">
-          <div class="bio-text" id="bio-text"><!-- render/about.js --></div>
-          <div class="bio-tags" id="bio-tags"><!-- render/about.js --></div>
-        </div>
-      </div>
-    </section>
+    <!-- ② 메인 화면: 책장. 책을 누르면 펼쳐짐 (render/library.js · ui/flipbook.js) -->
+    <main class="library" id="library" hidden>
+      <header class="library-bar">
+        <button type="button" class="library-home" id="library-home">← 처음으로</button>
+        <a class="library-link" href="/reservation.html">방문 예약 ↗</a>
+      </header>
 
-    <!-- Education -->
-    <section class="section section-dark" id="education">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Education</span>
-          <h2 class="section-title">학력사항</h2>
-        </div>
-        <div class="timeline" id="timeline"><!-- render/education.js --></div>
+      <div class="library-head">
+        <p class="library-kicker">Portfolio</p>
+        <h1 class="library-title" id="library-owner">책장</h1>
+        <p class="library-lead">읽고 싶은 책을 골라 펼쳐 보세요</p>
       </div>
-    </section>
 
-    <!-- Awards -->
-    <section class="section" id="awards">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Awards &amp; Competitions</span>
-          <h2 class="section-title">공모전 참여 이력</h2>
-        </div>
-        <div class="awards-grid" id="awards-grid"><!-- render/awards.js --></div>
+      <div class="shelf">
+        <div class="shelf-books" id="shelf-books"><!-- render/library.js --></div>
+        <div class="shelf-board" aria-hidden="true"></div>
+        <p class="shelf-caption" id="shelf-caption" aria-live="polite">책을 누르면 펼쳐져요</p>
       </div>
-    </section>
 
-    <!-- Skills -->
-    <section class="section section-dark" id="skills">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Interests</span>
-          <h2 class="section-title">관심 분야</h2>
-        </div>
-        <div class="skills-grid" id="skills-grid"><!-- render/skills.js --></div>
+      <!-- 찾아오는 길: 지도 · 주소 · 날씨 (render/library.js) -->
+      <section class="visit" id="library-visit" aria-labelledby="visit-title"></section>
+
+      <!-- 방문 예약: 예약 페이지로 이동 -->
+      <div class="library-actions">
+        <a class="library-reserve" href="/reservation.html">방문 예약하기 →</a>
       </div>
-    </section>
 
-    <!-- Contact -->
-    <section class="section" id="contact">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Contact</span>
-          <h2 class="section-title">연락처</h2>
-        </div>
-        <div class="contact-content">
-          <p class="contact-intro" id="contact-intro"><!-- render/contact.js --></p>
-          <div class="contact-cards" id="contact-cards"><!-- render/contact.js --></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Location -->
-    <section class="section section-dark" id="location">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Location</span>
-          <h2 class="section-title">찾아오는 길</h2>
-        </div>
-        <p class="section-intro" id="location-intro"><!-- render/location.js --></p>
-        <div class="location-grid">
-          <div class="location-map" id="location-map"><!-- render/location.js --></div>
-          <div class="location-info" id="location-info"><!-- render/location.js --></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="footer-inner" id="footer-inner"><!-- render/footer.js --></div>
-    </footer>
+      <footer class="library-footer" id="library-footer"><!-- render/library.js --></footer>
+    </main>
 
   </div>
 

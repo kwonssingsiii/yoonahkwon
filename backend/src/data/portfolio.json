@@ -54,8 +54,23 @@
         "summary": "과거 쓰레기 매립장이었던 울산 남구 여천동 부지(1.3ha)를 2028 울산국제정원박람회와 이어지는 '동행'의 도시숲으로 재생한 작품입니다. 울산의 상징인 고래 형상을 따라 숲을 『환영』·『함께』·『마주』·『소망』해, 우리 네 공간으로 나누고, 바람생성숲으로 도시 열섬과 미세먼지를 줄이며 미야와키 방식의 탄소중립숲과 내음숲(악취저감숲)으로 탄소 흡수와 매립지 악취 문제를 해결했습니다. 시민참여 그림길, 기업이 함께 가꾸는 어울숲(ESG), 울산의 역사를 담은 이끼벽화와 AR 스마트벤치로 시민과 기업이 함께 누리는 숲을 제안했습니다.",
         "image": {
           "src": "/assets/images/awards/urban-forest.jpg",
-          "large": "/assets/images/awards/urban-forest-large.jpg",
+          "large": "/assets/images/awards/urban-forest/panel.jpg",
           "alt": "고래 올림(林) 설계 판넬 — 고래 형상의 도시숲 평면도와 환영·함께·마주·소망 공간별 계획"
+        },
+        "booklet": {
+          "pages": [
+            "/assets/images/awards/urban-forest/panel.jpg",
+            "/assets/images/awards/urban-forest/page-01.jpg",
+            "/assets/images/awards/urban-forest/page-02.jpg",
+            "/assets/images/awards/urban-forest/page-03.jpg",
+            "/assets/images/awards/urban-forest/page-04.jpg",
+            "/assets/images/awards/urban-forest/page-05.jpg",
+            "/assets/images/awards/urban-forest/page-06.jpg",
+            "/assets/images/awards/urban-forest/page-07.jpg",
+            "/assets/images/awards/urban-forest/page-08.jpg",
+            "/assets/images/awards/urban-forest/page-09.jpg",
+            "/assets/images/awards/urban-forest/page-10.jpg"
+          ]
         }
       }
     },
